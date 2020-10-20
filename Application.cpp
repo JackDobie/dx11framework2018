@@ -69,7 +69,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 5.0f, -2.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 5.0f, -6.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -434,6 +434,20 @@ HRESULT Application::InitDevice()
         return hr;
 
     _pImmediateContext->OMSetRenderTargets(1, &_pRenderTargetView, _depthStencilView);
+    
+    D3D11_RASTERIZER_DESC wfdesc;
+    ZeroMemory(&wfdesc, sizeof(D3D11_RASTERIZER_DESC));
+    wfdesc.FillMode = D3D11_FILL_WIREFRAME;
+    wfdesc.CullMode = D3D11_CULL_NONE;
+    hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_wireFrame);
+
+    ZeroMemory(&wfdesc, sizeof(D3D11_RASTERIZER_DESC));
+    wfdesc.FillMode = D3D11_FILL_SOLID;
+    wfdesc.CullMode = D3D11_CULL_BACK;
+    hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_solid);
+
+    if (FAILED(hr))
+        return hr;
 
     return S_OK;
 }
@@ -454,6 +468,7 @@ void Application::Cleanup()
     if (_pd3dDevice) _pd3dDevice->Release();
     if (_depthStencilView) _depthStencilView->Release();
     if (_depthStencilBuffer) _depthStencilBuffer->Release();
+    if (_wireFrame) _wireFrame->Release();
 }
 
 void Application::Update()
@@ -479,9 +494,13 @@ void Application::Update()
     //
     // Animate the cube
     //
-	XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
+    //result = scale * selfRotation * translation * orbitRotation
+    XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));//centre cube
 
-    XMStoreFloat4x4(&_world2, XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, -2.0f, 0.0f));
+    XMStoreFloat4x4(&_world2, XMMatrixScaling(0.65f, 0.65f, 0.65f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, -2.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f));//spinning around centre
+    XMStoreFloat4x4(&_world3, XMMatrixScaling(0.65f, 0.65f, 0.65f) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, -2.0f, 0.0f) * XMMatrixRotationZ(t * 0.6f));//spinning around centre
+
+    //XMStoreFloat4x4(&_world4, XMMatrixTranslation(-8.0f, -2.0f, 0.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationZ(t));//spinning around centre
 }
 
 void Application::Draw()
@@ -508,16 +527,27 @@ void Application::Draw()
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     //
-    // Renders a triangle
+    // Draws first cube
     //
+    _pImmediateContext->RSSetState(_solid);
+
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
 	_pImmediateContext->DrawIndexed(36, 0, 0);        
 
-    //draws second cube
+    // Draws second cube
+    _pImmediateContext->RSSetState(_wireFrame);
     world = XMLoadFloat4x4(&_world2);
+    cb.mWorld = XMMatrixTranspose(world);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    //cube 3
+    _pImmediateContext->RSSetState(_wireFrame);
+    world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
