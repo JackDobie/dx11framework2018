@@ -445,6 +445,7 @@ HRESULT Application::InitDevice()
     wfdesc.FillMode = D3D11_FILL_SOLID;
     wfdesc.CullMode = D3D11_CULL_BACK;
     hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_solid);
+    rasterState = 0;
 
     if (FAILED(hr))
         return hr;
@@ -491,6 +492,11 @@ void Application::Update()
         t = (dwTimeCur - dwTimeStart) / 1000.0f;
     }
 
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000 != 0)
+    {
+        rasterState = rasterState == 0 ? 1 : 0;
+    }
+
     //
     // Animate the cube
     //
@@ -505,6 +511,8 @@ void Application::Update()
 
 void Application::Draw()
 {
+    _pImmediateContext->RSSetState(rasterState == 0 ? _wireFrame : _solid);
+
     //
     // Clear the back buffer
     //
@@ -529,7 +537,7 @@ void Application::Draw()
     //
     // Draws first cube
     //
-    _pImmediateContext->RSSetState(_solid);
+    //_pImmediateContext->RSSetState(_solid);
 
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -538,7 +546,8 @@ void Application::Draw()
 	_pImmediateContext->DrawIndexed(36, 0, 0);        
 
     // Draws second cube
-    _pImmediateContext->RSSetState(_wireFrame);
+    //_pImmediateContext->RSSetState(_wireFrame);
+
     world = XMLoadFloat4x4(&_world2);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -546,7 +555,8 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 3
-    _pImmediateContext->RSSetState(_wireFrame);
+    //_pImmediateContext->RSSetState(_wireFrame);
+
     world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);

@@ -59,6 +59,9 @@ private:
 	UINT _WindowHeight;
 	UINT _WindowWidth;
 
+	/// <summary> 0 = wireframe, 1 = solid </summary>
+	int rasterState;
+
 public:
 	Application();
 	~Application();

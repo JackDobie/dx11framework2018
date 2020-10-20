@@ -1,4 +1,3 @@
 ﻿  Application.cpp
-  DX11 Framework.cpp
-  Generating Code...
+D:\Documents\GitHub\dx11framework2018\Application.cpp(495,49): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
   DX11 Framework.vcxproj -> D:\Documents\GitHub\dx11framework2018\Debug\DX11 Framework.exe
