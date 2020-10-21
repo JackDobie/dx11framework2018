@@ -492,7 +492,7 @@ void Application::Update()
         t = (dwTimeCur - dwTimeStart) / 1000.0f;
     }
 
-    if (GetAsyncKeyState(VK_SPACE) & 0x8000 != 0)
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000 != 0)//if space is pressed DOWN
     {
         rasterState = rasterState == 0 ? 1 : 0;
     }
@@ -503,10 +503,13 @@ void Application::Update()
     //result = scale * selfRotation * translation * orbitRotation
     XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));//centre cube
 
-    XMStoreFloat4x4(&_world2, XMMatrixScaling(0.65f, 0.65f, 0.65f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, -2.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f));//spinning around centre
-    XMStoreFloat4x4(&_world3, XMMatrixScaling(0.65f, 0.65f, 0.65f) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, -2.0f, 0.0f) * XMMatrixRotationZ(t * 0.6f));//spinning around centre
+    XMStoreFloat4x4(&_world2, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f));//spinning around centre
 
-    //XMStoreFloat4x4(&_world4, XMMatrixTranslation(-8.0f, -2.0f, 0.0f) * XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationZ(t));//spinning around centre
+    XMStoreFloat4x4(&_world3, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t * 0.6f));//spinning around centre
+
+    XMStoreFloat4x4(&_world4, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f));//spinning around world2
+
+    XMStoreFloat4x4(&_world5, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t));//spinning around world3
 }
 
 void Application::Draw()
@@ -558,6 +561,20 @@ void Application::Draw()
     //_pImmediateContext->RSSetState(_wireFrame);
 
     world = XMLoadFloat4x4(&_world3);
+    cb.mWorld = XMMatrixTranspose(world);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    //cube 4
+    world = XMLoadFloat4x4(&_world4);
+    cb.mWorld = XMMatrixTranspose(world);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    //cube 5
+    world = XMLoadFloat4x4(&_world5);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
