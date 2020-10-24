@@ -184,6 +184,30 @@ HRESULT Application::InitVertexBuffer()
     if (FAILED(hr))
         return hr;
 
+    //mesh 2 - pyramid
+    SimpleVertex vertices2[] =
+    {
+        { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(0.0f, 0.0f, 2.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+    };
+
+    ZeroMemory(&bd, sizeof(bd));
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(SimpleVertex) * 8;// 4;
+    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bd.CPUAccessFlags = 0;
+
+    ZeroMemory(&InitData, sizeof(InitData));
+    InitData.pSysMem = vertices2;
+
+    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer2);
+
+    if (FAILED(hr))
+        return hr;
+
 	return S_OK;
 }
 
@@ -217,7 +241,6 @@ HRESULT Application::InitIndexBuffer()
         0,4,3,
         4,5,6,
         6,5,7,*/
-
     };
 
 	D3D11_BUFFER_DESC bd;
@@ -232,6 +255,30 @@ HRESULT Application::InitIndexBuffer()
 	ZeroMemory(&InitData, sizeof(InitData));
     InitData.pSysMem = indices;
     hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer);
+
+    if (FAILED(hr))
+        return hr;
+
+    WORD indices2[] =
+    {
+        0,1,2,
+        2,1,3,
+        0,4,1,
+        0,4,2,
+        1,4,3,
+        2,4,3,
+    };
+
+    ZeroMemory(&bd, sizeof(bd));
+
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(WORD) * 36;
+    bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    bd.CPUAccessFlags = 0;
+
+    ZeroMemory(&InitData, sizeof(InitData));
+    InitData.pSysMem = indices2;
+    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer2);
 
     if (FAILED(hr))
         return hr;
@@ -427,7 +474,7 @@ HRESULT Application::InitDevice()
     depthStencilDesc.CPUAccessFlags     = 0;
     depthStencilDesc.MiscFlags          = 0;
 
-    _pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_depthStencilBuffer);//HERE
+    _pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_depthStencilBuffer);
     _pd3dDevice->CreateDepthStencilView(_depthStencilBuffer, nullptr, &_depthStencilView);
 
     if (FAILED(hr))
@@ -455,8 +502,6 @@ HRESULT Application::InitDevice()
 
 void Application::Cleanup()
 {
-    if (_pImmediateContext) _pImmediateContext->ClearState();
-
     if (_pConstantBuffer) _pConstantBuffer->Release();
     if (_pVertexBuffer) _pVertexBuffer->Release();
     if (_pIndexBuffer) _pIndexBuffer->Release();
@@ -540,16 +585,20 @@ void Application::Draw()
     //
     // Draws first cube
     //
-    //_pImmediateContext->RSSetState(_solid);
+    UINT stride = sizeof(SimpleVertex);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, 0);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
 
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
-	_pImmediateContext->DrawIndexed(36, 0, 0);        
+
+	_pImmediateContext->DrawIndexed(18, 0, 0);
 
     // Draws second cube
-    //_pImmediateContext->RSSetState(_wireFrame);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, 0);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world2);
     cb.mWorld = XMMatrixTranspose(world);
@@ -558,7 +607,8 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 3
-    //_pImmediateContext->RSSetState(_wireFrame);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, 0);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
@@ -567,18 +617,24 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 4
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, 0);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+
     world = XMLoadFloat4x4(&_world4);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(36, 0, 0);
+    _pImmediateContext->DrawIndexed(18, 0, 0);
 
     //cube 5
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, 0);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+
     world = XMLoadFloat4x4(&_world5);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(36, 0, 0);
+    _pImmediateContext->DrawIndexed(18, 0, 0);
 
     //
     // Present our back buffer to our front buffer
