@@ -590,9 +590,8 @@ void Application::Draw()
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
 
-    UINT stride = sizeof(SimpleVertex) * 8;
-    UINT stride2 = sizeof(SimpleVertex) * 5;
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer, &stride, 0);
+    UINT stride = sizeof(SimpleVertex);
+    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride, 0);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
 
 	_pImmediateContext->DrawIndexed(18, 0, 0);
@@ -618,7 +617,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 4
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride2, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride, 0);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world4);
@@ -628,7 +627,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(18, 0, 0);
 
     //cube 5
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride2, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride, 0);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world5);
