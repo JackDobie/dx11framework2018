@@ -69,7 +69,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 5.0f, -6.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 4.0f, -1.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -264,9 +264,9 @@ HRESULT Application::InitIndexBuffer()
         0,1,2,
         2,1,3,
         0,4,1,
-        0,4,2,
+        2,4,0,
         1,4,3,
-        2,4,3,
+        3,4,2,
     };
 
     ZeroMemory(&bd, sizeof(bd));
@@ -591,13 +591,14 @@ void Application::Draw()
 	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
 
     UINT stride = sizeof(SimpleVertex);
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride, 0);
+    UINT offset = 0;
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
 
 	_pImmediateContext->DrawIndexed(18, 0, 0);
 
     // Draws second cube
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer, &stride, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world2);
@@ -607,7 +608,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 3
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer, &stride, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world3);
@@ -617,8 +618,8 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 4
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride, 0);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world4);
     cb.mWorld = XMMatrixTranspose(world);
@@ -627,8 +628,8 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(18, 0, 0);
 
     //cube 5
-    _pImmediateContext->IASetVertexBuffers(0, 0, &_pVertexBuffer2, &stride, 0);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
 
     world = XMLoadFloat4x4(&_world5);
     cb.mWorld = XMMatrixTranspose(world);
