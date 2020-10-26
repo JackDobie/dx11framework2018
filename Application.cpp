@@ -542,6 +542,10 @@ void Application::Update()
         rasterState = rasterState == 0 ? 1 : 0;
     }
 
+    ConstantBuffer cb;
+    cb.gTime = t;
+
+
     //
     // Animate the cube
     //

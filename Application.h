@@ -17,9 +17,10 @@ struct SimpleVertex
 
 struct ConstantBuffer
 {
-	XMMATRIX mWorld;
-	XMMATRIX mView;
-	XMMATRIX mProjection;
+	XMMATRIX	mWorld;
+	XMMATRIX	mView;
+	XMMATRIX	mProjection;
+	float		gTime;
 };
 
 class Application
