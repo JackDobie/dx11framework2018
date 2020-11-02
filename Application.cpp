@@ -329,28 +329,44 @@ HRESULT Application::InitIndexBuffer()
 
     WORD indices3[] =
     {
+        0,1,5,
         1,6,5,
-        2,7,3,
+        1,2,6,
+        2,7,6,
+        2,3,7,
         3,8,7,
+        3,4,8,
         4,9,8,
+        5,6,10,
         6,11,10,
+        6,7,11,
         7,12,11,
+        7,8,12,
         8,13,12,
+        8,9,13,
         9,14,13,
+        10,11,15,
         11,16,15,
+        11,12,16,
         12,17,16,
+        12,13,17,
         13,18,17,
+        13,14,18,
         14,19,18,
+        15,16,20,
         16,21,20,
+        16,17,21,
         17,22,21,
+        17,18,22,
         18,23,22,
+        18,19,23,
         19,24,23,
     };
 
     ZeroMemory(&bd, sizeof(bd));
 
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(WORD) * 48;
+    bd.ByteWidth = sizeof(WORD) * 96;
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
     bd.CPUAccessFlags = 0;
 
@@ -729,7 +745,7 @@ void Application::Draw()
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(48, 0, 0);
+    _pImmediateContext->DrawIndexed(96, 0, 0);
 
     //
     // Present our back buffer to our front buffer
