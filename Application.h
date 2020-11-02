@@ -39,14 +39,16 @@ private:
 	ID3D11InputLayout*      _pVertexLayout;
 	ID3D11Buffer*			_pVertexBuffer;
 	ID3D11Buffer*			_pVertexBuffer2;
+	ID3D11Buffer*			_pVertexBuffer3;
 	ID3D11Buffer*           _pIndexBuffer;
 	ID3D11Buffer*			_pIndexBuffer2;
+	ID3D11Buffer*			_pIndexBuffer3;
 	ID3D11Buffer*           _pConstantBuffer;
 	ID3D11DepthStencilView* _depthStencilView;
 	ID3D11Texture2D*		_depthStencilBuffer;
 	ID3D11RasterizerState*	_wireFrame;
 	ID3D11RasterizerState*	_solid;
-	XMFLOAT4X4              _world, _world2, _world3, _world4, _world5;
+	XMFLOAT4X4              _world, _world2, _world3, _world4, _world5, _world6;
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
 

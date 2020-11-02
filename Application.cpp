@@ -196,7 +196,7 @@ HRESULT Application::InitVertexBuffer()
 
     ZeroMemory(&bd, sizeof(bd));
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(SimpleVertex) * 5;// 4;
+    bd.ByteWidth = sizeof(SimpleVertex) * 5;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.CPUAccessFlags = 0;
 
@@ -204,6 +204,50 @@ HRESULT Application::InitVertexBuffer()
     InitData.pSysMem = vertices2;
 
     hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer2);
+
+    if (FAILED(hr))
+        return hr;
+
+    //mesh 3 - grid
+    SimpleVertex vertices3[] =
+    {
+        { XMFLOAT3(2.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(2.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(2.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(2.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(2.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(1.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(1.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(0.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(0.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-2.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-2.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-2.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-2.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-2.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    };
+
+    ZeroMemory(&bd, sizeof(bd));
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(SimpleVertex) * 25;
+    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bd.CPUAccessFlags = 0;
+
+    ZeroMemory(&InitData, sizeof(InitData));
+    InitData.pSysMem = vertices2;
+
+    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer3);
 
     if (FAILED(hr))
         return hr;
@@ -272,13 +316,47 @@ HRESULT Application::InitIndexBuffer()
     ZeroMemory(&bd, sizeof(bd));
 
     bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(WORD) * 36;
+    bd.ByteWidth = sizeof(WORD) * 18;
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
     bd.CPUAccessFlags = 0;
 
     ZeroMemory(&InitData, sizeof(InitData));
     InitData.pSysMem = indices2;
     hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer2);
+
+    if (FAILED(hr))
+        return hr;
+
+    WORD indices3[] =
+    {
+        1,6,5,
+        2,7,3,
+        3,8,7,
+        4,9,8,
+        6,11,10,
+        7,12,11,
+        8,13,12,
+        9,14,13,
+        11,16,15,
+        12,17,16,
+        13,18,17,
+        14,19,18,
+        16,21,20,
+        17,22,21,
+        18,23,22,
+        19,24,23,
+    };
+
+    ZeroMemory(&bd, sizeof(bd));
+
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(WORD) * 48;
+    bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    bd.CPUAccessFlags = 0;
+
+    ZeroMemory(&InitData, sizeof(InitData));
+    InitData.pSysMem = indices3;
+    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer3);
 
     if (FAILED(hr))
         return hr;
@@ -559,6 +637,8 @@ void Application::Update()
     XMStoreFloat4x4(&_world4, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f));//spinning around world2
 
     XMStoreFloat4x4(&_world5, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t));//spinning around world3
+
+    XMStoreFloat4x4(&_world6, XMMatrixRotationZ(t));
 }
 
 void Application::Draw()
@@ -640,6 +720,16 @@ void Application::Draw()
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     _pImmediateContext->DrawIndexed(18, 0, 0);
+
+    //4x4grid
+    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer3, &stride, &offset);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer3, DXGI_FORMAT_R16_UINT, 0);
+
+    world = XMLoadFloat4x4(&_world6);
+    cb.mWorld = XMMatrixTranspose(world);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+
+    _pImmediateContext->DrawIndexed(48, 0, 0);
 
     //
     // Present our back buffer to our front buffer
