@@ -737,16 +737,16 @@ void Application::Draw()
 
     _pImmediateContext->DrawIndexed(18, 0, 0);
 
-    //4x4grid
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer3, &stride, &offset);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer3, DXGI_FORMAT_R16_UINT, 0);
+    ////4x4grid
+    //_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer3, &stride, &offset);
+    //_pImmediateContext->IASetIndexBuffer(_pIndexBuffer3, DXGI_FORMAT_R16_UINT, 0);
 
-    XMStoreFloat4x4(&_world6, XMMatrixRotationX(90));
-    world = XMLoadFloat4x4(&_world6);
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    //XMStoreFloat4x4(&_world6, XMMatrixRotationX(90));
+    //world = XMLoadFloat4x4(&_world6);
+    //cb.mWorld = XMMatrixTranspose(world);
+    //_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(96, 0, 0);
+    //_pImmediateContext->DrawIndexed(96, 0, 0);
 
     //
     // Present our back buffer to our front buffer
