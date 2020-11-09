@@ -12,7 +12,7 @@ using namespace DirectX;
 struct SimpleVertex
 {
     XMFLOAT3 Pos;
-    XMFLOAT4 Color;
+	XMFLOAT3 Normal;
 };
 
 struct ConstantBuffer
@@ -51,6 +51,9 @@ private:
 	XMFLOAT4X4              _world, _world2, _world3, _world4, _world5, _world6;
 	XMFLOAT4X4              _view;
 	XMFLOAT4X4              _projection;
+	XMFLOAT3				lightDirection;
+	XMFLOAT4				diffuseMaterial;
+	XMFLOAT4				diffuseLight;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);

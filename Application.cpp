@@ -127,7 +127,7 @@ HRESULT Application::InitShadersAndInputLayout()
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	UINT numElements = ARRAYSIZE(layout);
@@ -158,14 +158,14 @@ HRESULT Application::InitVertexBuffer()
         //{ XMFLOAT3( -1.0f, -1.0f, 0.0f ), XMFLOAT4( 0.0f, 1.0f, 1.0f, 1.0f ) },
         //{ XMFLOAT3( 1.0f, -1.0f, 0.0f ), XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) },
         //{ XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },//
-        { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-        { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-        { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 1.0f, 2.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-        { XMFLOAT3(1.0f, 1.0f, 2.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, -1.0f, 2.0f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-        { XMFLOAT3(1.0f, -1.0f, 2.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT3(0.5f, 0.5f, 0.0f) },
+        { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT3(0.5f, 0.5f, 0.5f) },
+        { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT3(-1.5f, -0.5f, 0.0f) },
+        { XMFLOAT3(-1.0f, 1.0f, 2.0f), XMFLOAT3(0.0f, 2.0f, -1.0f) },
+        { XMFLOAT3(1.0f, 1.0f, 2.0f), XMFLOAT3(0.0f, -1.0f, 0.0f) },
+        { XMFLOAT3(-1.0f, -1.0f, 2.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+        { XMFLOAT3(1.0f, -1.0f, 2.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
     };
 
     D3D11_BUFFER_DESC bd;
@@ -184,73 +184,73 @@ HRESULT Application::InitVertexBuffer()
     if (FAILED(hr))
         return hr;
 
-    //mesh 2 - pyramid
-    SimpleVertex vertices2[] =
-    {
-        { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(0.0f, 0.0f, 2.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-    };
+    ////mesh 2 - pyramid
+    //SimpleVertex vertices2[] =
+    //{
+    //    { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, 0.0f, 2.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+    //};
 
-    ZeroMemory(&bd, sizeof(bd));
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(SimpleVertex) * 5;
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
+    //ZeroMemory(&bd, sizeof(bd));
+    //bd.Usage = D3D11_USAGE_DEFAULT;
+    //bd.ByteWidth = sizeof(SimpleVertex) * 5;
+    //bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    //bd.CPUAccessFlags = 0;
 
-    ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = vertices2;
+    //ZeroMemory(&InitData, sizeof(InitData));
+    //InitData.pSysMem = vertices2;
 
-    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer2);
+    //hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer2);
 
-    if (FAILED(hr))
-        return hr;
+    //if (FAILED(hr))
+    //    return hr;
 
-    //mesh 3 - grid
-    SimpleVertex vertices3[] =
-    {
-        { XMFLOAT3(2.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(2.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(2.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(2.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(2.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(1.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(1.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(0.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(0.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-1.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-2.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-2.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-2.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-2.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { XMFLOAT3(-2.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-    };
+    ////mesh 3 - grid
+    //SimpleVertex vertices3[] =
+    //{
+    //    { XMFLOAT3(2.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(2.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(2.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(2.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(2.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(1.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(0.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-1.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-1.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-1.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-2.0f, -2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-2.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-2.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-2.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //    { XMFLOAT3(-2.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+    //};
 
-    ZeroMemory(&bd, sizeof(bd));
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(SimpleVertex) * 25;
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
+    //ZeroMemory(&bd, sizeof(bd));
+    //bd.Usage = D3D11_USAGE_DEFAULT;
+    //bd.ByteWidth = sizeof(SimpleVertex) * 25;
+    //bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    //bd.CPUAccessFlags = 0;
 
-    ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = vertices2;
+    //ZeroMemory(&InitData, sizeof(InitData));
+    //InitData.pSysMem = vertices2;
 
-    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer3);
+    //hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer3);
 
-    if (FAILED(hr))
-        return hr;
+    //if (FAILED(hr))
+    //    return hr;
 
 	return S_OK;
 }
@@ -303,7 +303,7 @@ HRESULT Application::InitIndexBuffer()
     if (FAILED(hr))
         return hr;
 
-    WORD indices2[] =
+    /*WORD indices2[] =
     {
         0,1,2,
         2,1,3,
@@ -325,9 +325,9 @@ HRESULT Application::InitIndexBuffer()
     hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer2);
 
     if (FAILED(hr))
-        return hr;
+        return hr;*/
 
-    WORD indices3[] =
+    /*WORD indices3[] =
     {
         0,1,5,
         1,6,5,
@@ -375,7 +375,7 @@ HRESULT Application::InitIndexBuffer()
     hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer3);
 
     if (FAILED(hr))
-        return hr;
+        return hr;*/
 
 	return S_OK;
 }
@@ -692,14 +692,17 @@ void Application::Draw()
 
     UINT stride = sizeof(SimpleVertex);
     UINT offset = 0;
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
+    /*_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
 
-	_pImmediateContext->DrawIndexed(18, 0, 0);
-
-    // Draws second cube
+	_pImmediateContext->DrawIndexed(18, 0, 0);*/
     _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
+
+    // Draws second cube
+    /*_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);*/
 
     world = XMLoadFloat4x4(&_world2);
     cb.mWorld = XMMatrixTranspose(world);
@@ -708,8 +711,8 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 3
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    /*_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);*/
 
     world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
@@ -718,24 +721,26 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 4
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
+    /*_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);*/
 
     world = XMLoadFloat4x4(&_world4);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(18, 0, 0);
+    //_pImmediateContext->DrawIndexed(18, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
 
     //cube 5
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);
+    /*_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer2, &stride, &offset);
+    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer2, DXGI_FORMAT_R16_UINT, 0);*/
 
     world = XMLoadFloat4x4(&_world5);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(18, 0, 0);
+    //_pImmediateContext->DrawIndexed(18, 0, 0);
+    _pImmediateContext->DrawIndexed(36, 0, 0);
 
     ////4x4grid
     //_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer3, &stride, &offset);
