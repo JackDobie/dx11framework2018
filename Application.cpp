@@ -636,10 +636,6 @@ void Application::Update()
         rasterState = rasterState == 0 ? 1 : 0;
     }
 
-    ConstantBuffer cb;
-    cb.gTime = t;
-
-
     //
     // Animate the cube
     //
@@ -679,6 +675,12 @@ void Application::Draw()
 	cb.mWorld = XMMatrixTranspose(world);
 	cb.mView = XMMatrixTranspose(view);
 	cb.mProjection = XMMatrixTranspose(projection);
+    lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);
+    diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f);
+    diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    cb.DiffuseMtrl = diffuseMaterial;
+    cb.DiffuseLight = diffuseLight;
+    cb.LightVecW = lightDirection;
 
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 

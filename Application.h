@@ -20,7 +20,10 @@ struct ConstantBuffer
 	XMMATRIX	mWorld;
 	XMMATRIX	mView;
 	XMMATRIX	mProjection;
-	float		gTime;
+
+	XMFLOAT4	DiffuseMtrl;
+	XMFLOAT4	DiffuseLight;
+	XMFLOAT3	LightVecW;
 };
 
 class Application
