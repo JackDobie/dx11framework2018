@@ -28,7 +28,7 @@ struct VS_OUTPUT
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
-VS_OUTPUT VS( float4 Pos : POSITION, float4 Color : COLOR )
+VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
