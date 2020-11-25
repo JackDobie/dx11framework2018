@@ -24,6 +24,9 @@ struct ConstantBuffer
 	XMFLOAT4	DiffuseMtrl;
 	XMFLOAT4	DiffuseLight;
 	XMFLOAT3	LightVecW;
+
+	XMFLOAT4	AmbientMtrl;
+	XMFLOAT4	AmbientLight;
 };
 
 class Application
@@ -57,6 +60,8 @@ private:
 	XMFLOAT3				lightDirection;
 	XMFLOAT4				diffuseMaterial;
 	XMFLOAT4				diffuseLight;
+	XMFLOAT4				ambientMaterial;
+	XMFLOAT4				ambientLight;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);

@@ -100,7 +100,7 @@ HRESULT Application::InitShadersAndInputLayout()
 	hr = _pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &_pVertexShader);
 
 	if (FAILED(hr))
-	{	
+	{
 		pVSBlob->Release();
         return hr;
 	}
@@ -180,7 +180,7 @@ HRESULT Application::InitVertexBuffer()
     InitData.pSysMem = vertices;
 
     hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer);
-    
+
     if (FAILED(hr))
         return hr;
 
@@ -421,14 +421,14 @@ HRESULT Application::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoin
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined(DEBUG) || defined(_DEBUG)
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel, 
+    hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
 
     if (FAILED(hr))
@@ -513,7 +513,7 @@ HRESULT Application::InitDevice()
     if (FAILED(hr))
         return hr;
 
-    
+
 
     // Setup the viewport
     D3D11_VIEWPORT vp;
@@ -575,7 +575,7 @@ HRESULT Application::InitDevice()
         return hr;
 
     _pImmediateContext->OMSetRenderTargets(1, &_pRenderTargetView, _depthStencilView);
-    
+
     D3D11_RASTERIZER_DESC wfdesc;
     ZeroMemory(&wfdesc, sizeof(D3D11_RASTERIZER_DESC));
     wfdesc.FillMode = D3D11_FILL_WIREFRAME;
@@ -671,16 +671,21 @@ void Application::Draw()
     //
     // Update variables
     //
+    lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);
+    diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f);
+    diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    ambientMaterial = XMFLOAT4(0.2f, 0.2f, 0.2f, 0.2f);
+    ambientLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
     ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);
 	cb.mView = XMMatrixTranspose(view);
 	cb.mProjection = XMMatrixTranspose(projection);
-    lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);
-    diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f);
-    diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
     cb.DiffuseMtrl = diffuseMaterial;
     cb.DiffuseLight = diffuseLight;
     cb.LightVecW = lightDirection;
+    cb.AmbientLight = ambientLight;
+    cb.AmbientMtrl = ambientMaterial;
 
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
