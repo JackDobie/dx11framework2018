@@ -1,2 +1,0 @@
-C:\Users\Student\Documents\GitHub\dx11framework2018\Debug\DX11 Framework.exe
-C:\Users\Student\Documents\GitHub\dx11framework2018\Debug\DX11 Framework.pdb
