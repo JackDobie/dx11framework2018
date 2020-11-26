@@ -64,23 +64,6 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
 //--------------------------------------------------------------------------------------
 float4 PS( VS_OUTPUT input ) : SV_Target
 {
-    /*float r = reflect(-LightVecW, input.Norm);
-
-    float diffuseAmount = max(dot(LightVecW, input.Norm), 0.0f);
-
-    float specularAmount = pow(max(dot(r, input.PosW), 0), SpecularPower);
-
-    float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
-
-    float3 ambient = AmbientMtrl * AmbientLight;
-
-    float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
-
-    float4 finalColor;
-    finalColor.rgb = clamp(diffuse, 0, 1) + ambient + clamp(specular, 0, 1);
-    finalColor.a = DiffuseMtrl.a;
-    return finalColor;*/
-
     float diffuseAmount = max(dot(LightVecW, input.Norm), 0.0f);
     float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
 
