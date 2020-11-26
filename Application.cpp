@@ -676,6 +676,10 @@ void Application::Draw()
     diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
     ambientMaterial = XMFLOAT4(0.2f, 0.2f, 0.2f, 0.2f);
     ambientLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+    specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+    specularPower = 10.0f;
+    EyePosW = XMFLOAT4(0.0f, 4.0f, -1.0f, 0.0f);
 
     ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);
@@ -686,6 +690,11 @@ void Application::Draw()
     cb.LightVecW = lightDirection;
     cb.AmbientLight = ambientLight;
     cb.AmbientMtrl = ambientMaterial;
+    cb.SpeculatMtrl = specularMaterial;
+    cb.SpecularLight = specularLight;
+    cb.SpecularPower = specularPower;
+    cb.EyePosW = EyePosW;
+
 
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 

@@ -19,13 +19,19 @@ cbuffer ConstantBuffer : register( b0 )
 
     float4  AmbientMtrl;
     float4  AmbientLight;
+
+    float4  SpecularMtrl;
+    float4  SpecularLight;
+    float   SpecularPower;
+    float3  EyePosW;
 }
 
 //--------------------------------------------------------------------------------------
 struct VS_OUTPUT
 {
     float4 Pos : SV_POSITION;
-    float4 Color : COLOR0;
+    float3 Norm : NORMAL;
+    float3 PosW : POSITION;
 };
 
 //--------------------------------------------------------------------------------------
@@ -35,27 +41,19 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
+    //converts from model to world space
     output.Pos = mul( Pos, World );
+
+    output.PosW = normalize(EyePosW.xyz - output.Pos.xyz);
+
+    //converts from camera space from world space
     output.Pos = mul( output.Pos, View );
+
+    //converts from view space to projection
     output.Pos = mul( output.Pos, Projection );
 
-    //Convert from local space to world space
-    //W component of vector is 0 as vectors cannot be translated
     float3 normalW = mul(float4(NormalL, 0.0f), World).xyz;
-    normalW = normalize(normalW);
-
-    //compute colour using diffuse lighting only
-    /*float diffuseAmount = max(dot(LightVecW, normalW), 0.0f);
-    output.Color.rgb = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
-    output.Color.a = DiffuseMtrl.a;*/
-
-    float diffuseAmount = max(dot(LightVecW, normalW), 0.0f);
-    float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
-    output.Color.a = DiffuseMtrl.a;
-
-    float3 ambient = AmbientMtrl * AmbientLight;
-    output.Color.rgb = diffuse + ambient;
-    output.Color.a = DiffuseMtrl.a;
+    output.Norm = normalize(normalW);
 
     return output;
 }
@@ -66,5 +64,34 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
 //--------------------------------------------------------------------------------------
 float4 PS( VS_OUTPUT input ) : SV_Target
 {
-    return input.Color;
+    /*float r = reflect(-LightVecW, input.Norm);
+
+    float diffuseAmount = max(dot(LightVecW, input.Norm), 0.0f);
+
+    float specularAmount = pow(max(dot(r, input.PosW), 0), SpecularPower);
+
+    float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
+
+    float3 ambient = AmbientMtrl * AmbientLight;
+
+    float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
+
+    float4 finalColor;
+    finalColor.rgb = clamp(diffuse, 0, 1) + ambient + clamp(specular, 0, 1);
+    finalColor.a = DiffuseMtrl.a;
+    return finalColor;*/
+
+    float diffuseAmount = max(dot(LightVecW, input.Norm), 0.0f);
+    float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
+
+    float r = reflect(-LightVecW, input.Norm);
+    float specularAmount = pow(max(dot(r, input.PosW), 0.0f), SpecularPower);
+    float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
+
+    float3 ambient = AmbientMtrl * AmbientLight;
+
+    float4 outColour;
+    outColour.rgb = diffuse + ambient + clamp(specular, 0, 1);
+    outColour.a = DiffuseMtrl.a;
+    return outColour;
 }
