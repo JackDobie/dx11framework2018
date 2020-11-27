@@ -7,6 +7,9 @@
 //--------------------------------------------------------------------------------------
 // Constant Buffer Variables
 //--------------------------------------------------------------------------------------
+Texture2D    txDiffuse : register(t0);
+SamplerState samLinear : register(s0);
+
 cbuffer ConstantBuffer : register( b0 )
 {
 	matrix  World;
@@ -32,12 +35,13 @@ struct VS_OUTPUT
     float4 Pos : SV_POSITION;
     float3 Norm : NORMAL;
     float3 PosW : POSITION;
+    float2 Tex : TEXCOORD0;
 };
 
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
-VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
+VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL, float2 Tex : TEXCOORD0 )
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
 
@@ -55,6 +59,8 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
     float3 normalW = mul(float4(NormalL, 0.0f), World).xyz;
     output.Norm = normalize(normalW);
 
+    output.Tex = Tex;
+
     return output;
 }
 
@@ -64,8 +70,12 @@ VS_OUTPUT VS( float4 Pos : POSITION, float3 NormalL : NORMAL )
 //--------------------------------------------------------------------------------------
 float4 PS( VS_OUTPUT input ) : SV_Target
 {
+    float4 textureColour = txDiffuse.Sample(samLinear, input.Tex);
+
+    input.Norm = normalize(input.Norm);
+
     float diffuseAmount = max(dot(LightVecW, input.Norm), 0.0f);
-    float3 diffuse = diffuseAmount * (DiffuseMtrl * DiffuseLight).rgb;
+    float3 diffuse = diffuseAmount * (textureColour * DiffuseLight).rgb;
 
     float r = reflect(-LightVecW, input.Norm);
     float specularAmount = pow(max(dot(r, input.PosW), 0.0f), SpecularPower);
