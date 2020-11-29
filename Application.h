@@ -5,12 +5,14 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <directxcolors.h>
+#include <string>
 #include "resource.h"
 #include "DDSTextureLoader.h"
 #include "Structures.h"
 #include "OBJLoader.h"
 
 using namespace DirectX;
+using namespace std;
 
 struct ConstantBuffer
 {
@@ -87,6 +89,9 @@ private:
 
 	/// <summary> 0 = wireframe, 1 = solid </summary>
 	int rasterState;
+
+	MeshData LoadMesh(string path);
+	void LoadTexture(string path);
 
 public:
 	Application();

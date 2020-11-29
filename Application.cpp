@@ -481,7 +481,7 @@ void Application::Draw()
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     // Draws first cube
-    objMeshData = OBJLoader::Load("Models/sphere.obj", _pd3dDevice);
+    objMeshData = LoadMesh("Models/sphere.obj");
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -495,7 +495,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     // Draws second cube
-    objMeshData = OBJLoader::Load("Models/donut.obj", _pd3dDevice);
+    objMeshData = LoadMesh("Models/donut.obj");
     world = XMLoadFloat4x4(&_world2);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -505,7 +505,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 3
-    objMeshData = OBJLoader::Load("Models/donut.obj", _pd3dDevice);
+    objMeshData = LoadMesh("Models/donut.obj");
     world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -515,7 +515,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 4
-    objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
+    objMeshData = LoadMesh("Models/star.obj");
     world = XMLoadFloat4x4(&_world4);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -525,7 +525,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 5
-    objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
+    objMeshData = LoadMesh("Models/star.obj");
     world = XMLoadFloat4x4(&_world5);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -536,4 +536,17 @@ void Application::Draw()
 
     // Present our back buffer to our front buffer
     _pSwapChain->Present(0, 0);
+}
+
+MeshData Application::LoadMesh(string path)
+{
+    return OBJLoader::Load((char*)path.c_str(), _pd3dDevice);
+}
+
+void Application::LoadTexture(string path)
+{
+    ID3D11ShaderResourceView* _pTextureRV = nullptr;
+    CreateDDSTextureFromFile(_pd3dDevice, (wchar_t*)path.c_str(), nullptr, &_pTextureRV);
+
+    _pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
 }
