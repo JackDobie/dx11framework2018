@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Windows.h>
-#include <d3d11_1.h>
-#include <DirectXMath.h>
+#include <windows.h>
+#include <directxmath.h>
+using namespace DirectX;
 
 struct SimpleVertex
 {

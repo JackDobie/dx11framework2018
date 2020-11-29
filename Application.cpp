@@ -65,7 +65,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
-    //objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
+    objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
 
 	// Initialize the world matrix
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
@@ -151,64 +151,64 @@ HRESULT Application::InitShadersAndInputLayout()
 
 HRESULT Application::InitVertexBuffer()
 {
-	HRESULT hr;
+	//HRESULT hr;
 
-    // Create vertex buffer
-    SimpleVertex vertices[] =
-    {
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 0.0f) },	//Top Back Left
-        { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Right
-        { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Left
-        { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Left
-        { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Right
-        { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 1.0f) }, //Bottom Back Left
-        { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Back Right
-        { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
-        { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Right
-        { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Right
-        { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
-        { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 1.0f) }, //Bottom Front Right
-        { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Front Right
-        { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Left
-        { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Right
-        { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Right
-        { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Left
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 1.0f) }, //Bottom Front Left
-        { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 0.0f) }, //Top Front Left
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Left
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Left
-        { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 1.0f) }, //Bottom Back Left
-        { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Front Left
-        { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Left
-        { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Left
-        { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
-        { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 1.0f) }, //Top Back Left
-        { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 0.0f) }, //Bottom Back Left
-        { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Bottom Back Right
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
-        { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
-        { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Bottom Back Right
-        { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 1.0f) },	//Bottom Front Right
-    };
+ //   // Create vertex buffer
+ //   SimpleVertex vertices[] =
+ //   {
+ //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 0.0f) },	//Top Back Left
+ //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Right
+ //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Left
+ //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Left
+ //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Right
+ //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 1.0f) }, //Bottom Back Left
+ //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Back Right
+ //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
+ //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Right
+ //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Right
+ //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
+ //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 1.0f) }, //Bottom Front Right
+ //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Front Right
+ //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Left
+ //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Right
+ //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Right
+ //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Left
+ //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 1.0f) }, //Bottom Front Left
+ //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 0.0f) }, //Top Front Left
+ //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Left
+ //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
+ //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
+ //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Left
+ //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 1.0f) }, //Bottom Back Left
+ //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Front Left
+ //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
+ //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Left
+ //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Left
+ //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
+ //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 1.0f) }, //Top Back Left
+ //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 0.0f) }, //Bottom Back Left
+ //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Bottom Back Right
+ //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
+ //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
+ //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Bottom Back Right
+ //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 1.0f) },	//Bottom Front Right
+ //   };
 
-    D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(vertices);
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
+ //   D3D11_BUFFER_DESC bd;
+	//ZeroMemory(&bd, sizeof(bd));
+ //   bd.Usage = D3D11_USAGE_DEFAULT;
+ //   bd.ByteWidth = sizeof(vertices);
+ //   bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//bd.CPUAccessFlags = 0;
 
-    D3D11_SUBRESOURCE_DATA InitData;
-	ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = vertices;
+ //   D3D11_SUBRESOURCE_DATA InitData;
+	//ZeroMemory(&InitData, sizeof(InitData));
+ //   InitData.pSysMem = vertices;
 
-    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer);
+ //   hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer);
 
-    if (FAILED(hr))
-        return hr;
+ //   if (FAILED(hr))
+ //       return hr;
 
 	return S_OK;
 }
@@ -604,37 +604,37 @@ void Application::Draw()
     UINT stride = sizeof(SimpleVertex);
     UINT offset = 0;
 
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
-    _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(36, 0, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
+    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     // Draws second cube
     world = XMLoadFloat4x4(&_world2);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(36, 0, 0);
+    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 3
     world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(36, 0, 0);
+    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 4
     world = XMLoadFloat4x4(&_world4);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(36, 0, 0);
+    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 5
     world = XMLoadFloat4x4(&_world5);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->DrawIndexed(36, 0, 0);
+    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     // Present our back buffer to our front buffer
     _pSwapChain->Present(0, 0);
