@@ -65,6 +65,8 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
+    //objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
+
 	// Initialize the world matrix
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 

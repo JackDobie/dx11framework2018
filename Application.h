@@ -8,6 +8,7 @@
 #include "resource.h"
 #include "DDSTextureLoader.h"
 #include "Structures.h"
+#include "OBJLoader.h"
 
 using namespace DirectX;
 
@@ -70,6 +71,7 @@ private:
 	XMFLOAT4				specularLight;
 	float					specularPower;
 	XMFLOAT4				EyePosW;
+	MeshData				objMeshData;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
