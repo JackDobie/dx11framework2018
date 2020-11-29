@@ -149,110 +149,6 @@ HRESULT Application::InitShadersAndInputLayout()
 	return hr;
 }
 
-HRESULT Application::InitVertexBuffer()
-{
-	//HRESULT hr;
-
- //   // Create vertex buffer
- //   SimpleVertex vertices[] =
- //   {
- //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 0.0f) },	//Top Back Left
- //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Right
- //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Left
- //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Left
- //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Right
- //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, 0.0f, -1.0f),	XMFLOAT2(1.0f, 1.0f) }, //Bottom Back Left
- //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Back Right
- //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
- //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Back Right
- //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Right
- //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
- //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(1.0f, 0.0f, 0.0f),		XMFLOAT2(1.0f, 1.0f) }, //Bottom Front Right
- //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Front Right
- //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Left
- //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Right
- //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Right
- //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Left
- //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, 0.0f, 1.0f),		XMFLOAT2(1.0f, 1.0f) }, //Bottom Front Left
- //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 0.0f) }, //Top Front Left
- //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Left
- //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
- //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
- //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Top Back Left
- //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(-1.0f, 0.0f, 0.0f),	XMFLOAT2(1.0f, 1.0f) }, //Bottom Back Left
- //       { XMFLOAT3(-1.0f, 1.0f, 1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 0.0f) }, //Top Front Left
- //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
- //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Left
- //       { XMFLOAT3(-1.0f, 1.0f, -1.0f),	    XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(0.0f, 1.0f) }, //Top Back Left
- //       { XMFLOAT3(1.0f, 1.0f, 1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 0.0f) }, //Top Front Right
- //       { XMFLOAT3(1.0f, 1.0f, -1.0f),		XMFLOAT3(0.0f, 1.0f, 0.0f),		XMFLOAT2(1.0f, 1.0f) }, //Top Back Left
- //       { XMFLOAT3(-1.0f, -1.0f, -1.0f),	XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 0.0f) }, //Bottom Back Left
- //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Bottom Back Right
- //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
- //       { XMFLOAT3(-1.0f, -1.0f, 1.0f),	    XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(0.0f, 1.0f) }, //Bottom Front Left
- //       { XMFLOAT3(1.0f, -1.0f, -1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 0.0f) }, //Bottom Back Right
- //       { XMFLOAT3(1.0f, -1.0f, 1.0f),		XMFLOAT3(0.0f, -1.0f, 0.0f),	XMFLOAT2(1.0f, 1.0f) },	//Bottom Front Right
- //   };
-
- //   D3D11_BUFFER_DESC bd;
-	//ZeroMemory(&bd, sizeof(bd));
- //   bd.Usage = D3D11_USAGE_DEFAULT;
- //   bd.ByteWidth = sizeof(vertices);
- //   bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//bd.CPUAccessFlags = 0;
-
- //   D3D11_SUBRESOURCE_DATA InitData;
-	//ZeroMemory(&InitData, sizeof(InitData));
- //   InitData.pSysMem = vertices;
-
- //   hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer);
-
- //   if (FAILED(hr))
- //       return hr;
-
-	return S_OK;
-}
-
-HRESULT Application::InitIndexBuffer()
-{
-	HRESULT hr;
-
-    // Create index buffer
-    WORD indices[] =
-    {
-        0,1,2,
-        3,4,5,
-        6,7,8,
-        9,10,11,
-        12,13,14,
-        15,16,17,
-        18,19,20,
-        21,22,23,
-        24,25,26,
-        27,28,29,
-        30,31,32,
-        33,34,35,
-    };
-
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-
-    bd.Usage = D3D11_USAGE_DEFAULT;
-    bd.ByteWidth = sizeof(indices);
-    bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA InitData;
-	ZeroMemory(&InitData, sizeof(InitData));
-    InitData.pSysMem = indices;
-    hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer);
-
-    if (FAILED(hr))
-        return hr;
-
-	return S_OK;
-}
-
 HRESULT Application::InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
     // Register class
@@ -424,15 +320,6 @@ HRESULT Application::InitDevice()
     _pImmediateContext->RSSetViewports(1, &vp);
 
 	InitShadersAndInputLayout();
-
-	InitVertexBuffer();
-
-    // Set vertex buffer
-    UINT stride = sizeof(SimpleVertex);
-    UINT offset = 0;
-    _pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
-
-	InitIndexBuffer();
 
     // Set index buffer
     _pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
