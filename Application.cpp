@@ -480,9 +480,8 @@ void Application::Draw()
 
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    //
     // Draws first cube
-    //
+    objMeshData = OBJLoader::Load("Models/sphere.obj", _pd3dDevice);
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -496,31 +495,43 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     // Draws second cube
+    objMeshData = OBJLoader::Load("Models/donut.obj", _pd3dDevice);
     world = XMLoadFloat4x4(&_world2);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
+    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
+    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 3
+    objMeshData = OBJLoader::Load("Models/donut.obj", _pd3dDevice);
     world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
+    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
+    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 4
+    objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
     world = XMLoadFloat4x4(&_world4);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
+    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
+    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 5
+    objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
     world = XMLoadFloat4x4(&_world5);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
+    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
+    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     // Present our back buffer to our front buffer
