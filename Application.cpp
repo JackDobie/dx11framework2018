@@ -74,8 +74,19 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMVECTOR Eye = XMVectorSet(0.0f, 4.0f, -1.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    cam1 = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
 
-    cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
+    XMVECTOR Eye2 = XMVectorSet(2.0f, 4.0f, -1.0f, 0.0f);
+    XMVECTOR At2 = XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f);
+    XMVECTOR Up2 = XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f);
+    cam2 = new Camera(Eye2, At2, Up2, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
+
+    XMVECTOR Eye3 = XMVectorSet(0.0f, 4.0f, 2.0f, 0.0f);
+    XMVECTOR At3 = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
+    XMVECTOR Up3 = XMVectorSet(0.0f, 1.0f, 1.0f, 0.0f);
+    cam3 = new Camera(Eye3, At3, Up3, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
+
+    currentCam = cam1;
 
 	return S_OK;
 }
@@ -418,6 +429,19 @@ void Application::Update()
         rasterState = rasterState == 0 ? 1 : 0;
     }
 
+    if (GetAsyncKeyState(0x31) & 0x8000 != 0)//if 1 key is pressed DOWN
+    {
+        currentCam = cam1;
+    }
+    else if (GetAsyncKeyState(0x32) & 0x8000 != 0)//if 2 key is pressed DOWN
+    {
+        currentCam = cam2;
+    }
+    else if (GetAsyncKeyState(0x33) & 0x8000 != 0)//if 3 key is pressed DOWN
+    {
+        currentCam = cam3;
+    }
+
     //
     // Animate the cube
     //
@@ -446,8 +470,8 @@ void Application::Draw()
     _pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	XMMATRIX world = XMLoadFloat4x4(&_world);
-	XMMATRIX view = XMLoadFloat4x4(&cam->GetView());
-	XMMATRIX projection = XMLoadFloat4x4(&cam->GetProjection());
+	XMMATRIX view = XMLoadFloat4x4(&currentCam->GetView());
+	XMMATRIX projection = XMLoadFloat4x4(&currentCam->GetProjection());
 
     // Update variables
     lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);

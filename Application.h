@@ -73,7 +73,10 @@ private:
 	float					specularPower;
 	XMFLOAT4				EyePosW;
 	MeshData				objMeshData;
-	Camera*					cam;
+	Camera*					currentCam;
+	Camera*					cam1;
+	Camera*					cam2;
+	Camera*					cam3;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
