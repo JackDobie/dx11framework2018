@@ -386,6 +386,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="OBJLoader.h" />
     <CLInclude Include="resource.h" />

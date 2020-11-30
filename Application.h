@@ -10,6 +10,7 @@
 #include "DDSTextureLoader.h"
 #include "Structures.h"
 #include "OBJLoader.h"
+#include "Camera.h"
 
 using namespace DirectX;
 using namespace std;
@@ -62,8 +63,6 @@ private:
 	ID3D11RasterizerState*	_wireFrame;
 	ID3D11RasterizerState*	_solid;
 	XMFLOAT4X4              _world, _world2, _world3, _world4, _world5, _world6;
-	XMFLOAT4X4              _view;
-	XMFLOAT4X4              _projection;
 	XMFLOAT3				lightDirection;
 	XMFLOAT4				diffuseMaterial;
 	XMFLOAT4				diffuseLight;
@@ -74,6 +73,7 @@ private:
 	float					specularPower;
 	XMFLOAT4				EyePosW;
 	MeshData				objMeshData;
+	Camera*					cam;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);

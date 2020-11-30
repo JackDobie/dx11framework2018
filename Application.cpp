@@ -75,10 +75,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-	XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
-
-    // Initialize the projection matrix
-	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _WindowWidth / (FLOAT) _WindowHeight, 0.01f, 100.0f));
+    cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
 
 	return S_OK;
 }
@@ -449,8 +446,8 @@ void Application::Draw()
     _pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	XMMATRIX world = XMLoadFloat4x4(&_world);
-	XMMATRIX view = XMLoadFloat4x4(&_view);
-	XMMATRIX projection = XMLoadFloat4x4(&_projection);
+	XMMATRIX view = XMLoadFloat4x4(&cam->GetView());
+	XMMATRIX projection = XMLoadFloat4x4(&cam->GetProjection());
 
     // Update variables
     lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);
@@ -481,7 +478,7 @@ void Application::Draw()
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     // Draws first cube
-    objMeshData = LoadMesh("Models/sphere.obj");
+    objMeshData = LoadMesh("Models/star.obj");
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -495,7 +492,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     // Draws second cube
-    objMeshData = LoadMesh("Models/donut.obj");
+    objMeshData = LoadMesh("Models/cube.obj");
     world = XMLoadFloat4x4(&_world2);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -505,7 +502,7 @@ void Application::Draw()
     _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
 
     //cube 3
-    objMeshData = LoadMesh("Models/donut.obj");
+    objMeshData = LoadMesh("Models/cube.obj");
     world = XMLoadFloat4x4(&_world3);
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
