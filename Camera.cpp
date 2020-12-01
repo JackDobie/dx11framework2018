@@ -14,11 +14,6 @@ Camera::Camera(XMVECTOR position, XMVECTOR at, XMVECTOR up, float windowWidth, f
 	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, windowWidth / (float)windowHeight, 0.01f, 100.0f));
 }
 
-Camera::~Camera()
-{
-
-}
-
 void Camera::SetPos(XMVECTOR newEye)
 {
 	_eye = newEye;

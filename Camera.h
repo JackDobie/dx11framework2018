@@ -24,7 +24,6 @@ private:
 
 public:
 	Camera(XMVECTOR position, XMVECTOR at, XMVECTOR up, float windowWidth, float windowHeight, float nearDepth, float farDepth);
-	~Camera();
 
 	void Update();
 

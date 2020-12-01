@@ -65,28 +65,17 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
-    objMeshData = OBJLoader::Load("Models/star.obj", _pd3dDevice);
+    object1 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    object2 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    object3 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	// Initialize the world matrix
-	XMStoreFloat4x4(&_world, XMMatrixIdentity());
+    currentObject = object1;
 
     // Initialize the view matrix
 	XMVECTOR Eye = XMVectorSet(0.0f, 4.0f, -1.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    cam1 = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
-
-    XMVECTOR Eye2 = XMVectorSet(2.0f, 4.0f, -1.0f, 0.0f);
-    XMVECTOR At2 = XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f);
-    XMVECTOR Up2 = XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f);
-    cam2 = new Camera(Eye2, At2, Up2, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
-
-    XMVECTOR Eye3 = XMVectorSet(0.0f, 4.0f, 2.0f, 0.0f);
-    XMVECTOR At3 = XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
-    XMVECTOR Up3 = XMVectorSet(0.0f, 1.0f, 1.0f, 0.0f);
-    cam3 = new Camera(Eye3, At3, Up3, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
-
-    currentCam = cam1;
+    cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
 
 	return S_OK;
 }
@@ -315,8 +304,6 @@ HRESULT Application::InitDevice()
 
     _pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
 
-
-
     // Setup the viewport
     D3D11_VIEWPORT vp;
     vp.Width = (FLOAT)_WindowWidth;
@@ -406,7 +393,7 @@ void Application::Cleanup()
 
 void Application::Update()
 {
-    // Update our time
+    // Update time
     static float t = 0.0f;
 
     if (_driverType == D3D_DRIVER_TYPE_REFERENCE)
@@ -429,34 +416,9 @@ void Application::Update()
         rasterState = rasterState == 0 ? 1 : 0;
     }
 
-    if (GetAsyncKeyState(0x31) & 0x8000 != 0)//if 1 key is pressed DOWN
-    {
-        currentCam = cam1;
-    }
-    else if (GetAsyncKeyState(0x32) & 0x8000 != 0)//if 2 key is pressed DOWN
-    {
-        currentCam = cam2;
-    }
-    else if (GetAsyncKeyState(0x33) & 0x8000 != 0)//if 3 key is pressed DOWN
-    {
-        currentCam = cam3;
-    }
-
-    //
-    // Animate the cube
-    //
-    //result = scale * selfRotation * translation * orbitRotation
-    XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));//centre cube
-
-    XMStoreFloat4x4(&_world2, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f));//spinning around centre
-
-    XMStoreFloat4x4(&_world3, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t * 0.6f));//spinning around centre
-
-    XMStoreFloat4x4(&_world4, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f) * XMMatrixRotationZ(t) * XMMatrixTranslation(3.0f, 0.0f, 0.0f) * XMMatrixRotationZ(t * 1.8f));//spinning around world2
-
-    XMStoreFloat4x4(&_world5, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t) * XMMatrixRotationZ(-t * 1.4f) * XMMatrixTranslation(6.0f, .0f, 0.0f) * XMMatrixRotationZ(t));//spinning around world3
-
-    //XMStoreFloat4x4(&_world6, XMMatrixRotationZ(t));
+    object1->Update();
+    object2->Update();
+    object3->Update();
 }
 
 void Application::Draw()
@@ -469,9 +431,9 @@ void Application::Draw()
 
     _pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	XMMATRIX world = XMLoadFloat4x4(&_world);
-	XMMATRIX view = XMLoadFloat4x4(&currentCam->GetView());
-	XMMATRIX projection = XMLoadFloat4x4(&currentCam->GetProjection());
+	XMMATRIX world = XMLoadFloat4x4(&object1->GetTransform());
+	XMMATRIX view = XMLoadFloat4x4(&cam->GetView());
+	XMMATRIX projection = XMLoadFloat4x4(&cam->GetProjection());
 
     // Update variables
     lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);
@@ -502,7 +464,6 @@ void Application::Draw()
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     // Draws first cube
-    objMeshData = LoadMesh("Models/star.obj");
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -511,49 +472,27 @@ void Application::Draw()
     UINT stride = sizeof(SimpleVertex);
     UINT offset = 0;
 
-    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
-    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &object1->GetMesh()->VertexBuffer, &object1->GetMesh()->VBStride, &object1->GetMesh()->VBOffset);
+    _pImmediateContext->IASetIndexBuffer(object1->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->DrawIndexed(object1->GetMesh()->IndexCount, 0, 0);
 
     // Draws second cube
-    objMeshData = LoadMesh("Models/cube.obj");
-    world = XMLoadFloat4x4(&_world2);
+    world = XMLoadFloat4x4(&object2->GetTransform());
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
-    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &object2->GetMesh()->VertexBuffer, &object2->GetMesh()->VBStride, &object2->GetMesh()->VBOffset);
+    _pImmediateContext->IASetIndexBuffer(object2->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->DrawIndexed(object2->GetMesh()->IndexCount, 0, 0);
 
     //cube 3
-    objMeshData = LoadMesh("Models/cube.obj");
-    world = XMLoadFloat4x4(&_world3);
+    world = XMLoadFloat4x4(&object3->GetTransform());
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
-    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
-
-    //cube 4
-    objMeshData = LoadMesh("Models/star.obj");
-    world = XMLoadFloat4x4(&_world4);
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
-    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
-
-    //cube 5
-    objMeshData = LoadMesh("Models/star.obj");
-    world = XMLoadFloat4x4(&_world5);
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-    _pImmediateContext->IASetVertexBuffers(0, 1, &objMeshData.VertexBuffer, &objMeshData.VBStride, &objMeshData.VBOffset);
-    _pImmediateContext->IASetIndexBuffer(objMeshData.IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(objMeshData.IndexCount, 0, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &object3->GetMesh()->VertexBuffer, &object3->GetMesh()->VBStride, &object3->GetMesh()->VBOffset);
+    _pImmediateContext->IASetIndexBuffer(object3->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->DrawIndexed(object3->GetMesh()->IndexCount, 0, 0);
 
     // Present our back buffer to our front buffer
     _pSwapChain->Present(0, 0);
