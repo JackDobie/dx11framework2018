@@ -68,14 +68,20 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     object1 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     object2 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     object3 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-
-    currentObject = object1;
+    plane = new GameObject(OBJLoader::Load("Models/plane.obj", _pd3dDevice), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 4.0f, -1.0f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 1.0f);
+    XMFLOAT4 Eye = XMFLOAT4(0.0f, 2.0f, -1.0f, 0.0f);
+    XMFLOAT4 At = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
+    //XMVECTOR At = XMVectorSet(-2.5f, -4.0f, -1.0f, 0.0f);
+    XMFLOAT4 Up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
+    cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 100.0f);
+    // point towards = target point - initial point
+    //XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+    //point towards object 2
+    //cam->LookAt(object2->GetPosition());
+    //cam->SetAt(XMFLOAT4(object2->GetPosition().x - cam->GetAt().x, object2->GetPosition().y - cam->GetAt().y, object2->GetPosition().z - cam->GetAt().z, object2->GetPosition().w - cam->GetAt().w));
 
 	return S_OK;
 }
@@ -366,7 +372,7 @@ HRESULT Application::InitDevice()
     wfdesc.FillMode = D3D11_FILL_SOLID;
     wfdesc.CullMode = D3D11_CULL_BACK;
     hr = _pd3dDevice->CreateRasterizerState(&wfdesc, &_solid);
-    rasterState = 0;
+    rasterState = 1;
 
     if (FAILED(hr))
         return hr;
@@ -411,14 +417,120 @@ void Application::Update()
         t = (dwTimeCur - dwTimeStart) / 1000.0f;
     }
 
-    if (GetAsyncKeyState(VK_SPACE) & 0x8000 != 0)//if space is pressed DOWN
+    // https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+    //0x8000 is when key is held
+    if (GetAsyncKeyState(VK_SPACE) & 0x8000 != 0)//if space is pressed down
     {
         rasterState = rasterState == 0 ? 1 : 0;
+    }
+
+    if (GetAsyncKeyState(VK_ESCAPE) & 0x8000 != 0)//if escape is pressed down
+    {
+        //unlock cursor
+    }
+    else if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 != 0)//if left mouse is pressed down
+    {
+        //lock cursor
+    }
+
+    if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
+    {
+        //move cam forwards
+        cam->AddPos(XMFLOAT4(0.0f, 0.0f, 0.01f, 0.0f));
+        //cam->Move(XMFLOAT4(0.0f, 0.0f, 0.01f, 0.0f));
+        //cam->AddAt(XMFLOAT4(0.0f, 0.0f, 0.01f, 0.0f));
+    }
+    else if (GetAsyncKeyState(0x53) & 0x8000)//if S is pressed down
+    {
+        //move cam backwards
+        cam->AddPos(XMFLOAT4(0.0f, 0.0f, -0.01f, 0.0f));
+        //cam->Move(XMFLOAT4(0.0f, 0.0f, -0.01f, 0.0f));
+        //cam->AddAt(XMFLOAT4(0.0f, 0.0f, -0.01f, 0.0f));
+    }
+    if (GetAsyncKeyState(0x41) & 0x8000)//if A is pressed down
+    {
+        //move cam left
+        cam->AddPos(XMFLOAT4(-0.01f, 0.0f, 0.0f, 0.0f));
+        //cam->Move(XMFLOAT4(-0.01f, 0.0f, 0.0f, 0.0f));
+        //cam->AddAt(XMFLOAT4(-0.01f, 0.0f, 0.0f, 0.0f));
+    }
+    else if (GetAsyncKeyState(0x44) & 0x8000)//if D is pressed down
+    {
+        //move cam right
+        cam->AddPos(XMFLOAT4(0.01f, 0.0f, 0.0f, 0.0f));
+        //cam->Move(XMFLOAT4(0.01f, 0.0f, 0.0f, 0.0f));
+        //cam->AddAt(XMFLOAT4(0.01f, 0.0f, 0.0f, 0.0f));
+    }
+
+    if (GetAsyncKeyState(VK_UP) & 0x8000)//if up arrow is pressed
+    {
+        //point cam up
+        cam->AddAt(XMFLOAT4(0.0f, 0.001f, 0.0f, 0.0f));
+    }
+    else if (GetAsyncKeyState(VK_DOWN) & 0x8000)//if down arrow is pressed
+    {
+        //point cam down
+        cam->AddAt(XMFLOAT4(0.0f, -0.001f, 0.0f, 0.0f));
+    }
+    if (GetAsyncKeyState(VK_LEFT) & 0x8000)//if left arrow is pressed
+    {
+        //point cam up
+        cam->AddAt(XMFLOAT4(0.0f, 0.0f, -0.001f, 0.0f));
+    }
+    else if (GetAsyncKeyState(VK_RIGHT) & 0x8000)//if right arrow is pressed
+    {
+        //point cam down
+        cam->AddAt(XMFLOAT4(0.0f, 0.0f, 0.001f, 0.0f));
+    }
+
+    if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000 != 0)//if numpad1 is pressed down
+    {
+        //point cam up
+        XMFLOAT4 obj1Pos = object1->GetPosition();
+        object1->SetPosition(XMFLOAT4(obj1Pos.x + 5.0f, obj1Pos.y, obj1Pos.z, obj1Pos.z));
+    }
+    else if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000 != 0)//if numpad4 is pressed down
+    {
+        //point cam up
+        XMFLOAT4 obj1Pos = object1->GetPosition();
+        object1->SetPosition(XMFLOAT4(obj1Pos.x - 5.0f, obj1Pos.y, obj1Pos.z, obj1Pos.z));
+    }
+    if (GetAsyncKeyState(VK_NUMPAD2) & 0x8000 != 0)//if numpad2 is pressed down
+    {
+        //point cam up
+        XMFLOAT4 obj2Pos = object2->GetPosition();
+        object2->SetPosition(XMFLOAT4(obj2Pos.x + 5.0f, obj2Pos.y, obj2Pos.z, obj2Pos.z));
+    }
+    else if (GetAsyncKeyState(VK_NUMPAD5) & 0x8000 != 0)//if numpad5 is pressed down
+    {
+        //point cam up
+        XMFLOAT4 obj2Pos = object2->GetPosition();
+        object2->SetPosition(XMFLOAT4(obj2Pos.x - 5.0f, obj2Pos.y, obj2Pos.z, obj2Pos.z));
+    }
+
+    if (GetAsyncKeyState(VK_NUMPAD3) & 0x8000 != 0)//if numpad3 is pressed down
+    {
+        //point cam up
+        XMFLOAT4 obj3Pos = object3->GetPosition();
+        object3->SetPosition(XMFLOAT4(obj3Pos.x + 5.0f, obj3Pos.y, obj3Pos.z, obj3Pos.z));
+    }
+    else if (GetAsyncKeyState(VK_NUMPAD6) & 0x8000 != 0)//if numpad6 is pressed down
+    {
+        //point cam up
+        XMFLOAT4 obj3Pos = object3->GetPosition();
+        object3->SetPosition(XMFLOAT4(obj3Pos.x - 5.0f, obj3Pos.y, obj3Pos.z, obj3Pos.z));
+    }
+
+    if (GetAsyncKeyState(0x52) & 0x8000 != 0)//if r is pressed down
+    {
+        //look at object 2
+        cam->LookAt(object2->GetPosition());
     }
 
     object1->Update();
     object2->Update();
     object3->Update();
+    cam->Update();
 }
 
 void Application::Draw()
@@ -463,7 +575,7 @@ void Application::Draw()
 
 	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    // Draws first cube
+    // Draws first object
 	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -476,7 +588,7 @@ void Application::Draw()
     _pImmediateContext->IASetIndexBuffer(object1->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(object1->GetMesh()->IndexCount, 0, 0);
 
-    // Draws second cube
+    // Draws second object
     world = XMLoadFloat4x4(&object2->GetTransform());
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -485,7 +597,7 @@ void Application::Draw()
     _pImmediateContext->IASetIndexBuffer(object2->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(object2->GetMesh()->IndexCount, 0, 0);
 
-    //cube 3
+    // Draws third object
     world = XMLoadFloat4x4(&object3->GetTransform());
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -493,6 +605,15 @@ void Application::Draw()
     _pImmediateContext->IASetVertexBuffers(0, 1, &object3->GetMesh()->VertexBuffer, &object3->GetMesh()->VBStride, &object3->GetMesh()->VBOffset);
     _pImmediateContext->IASetIndexBuffer(object3->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(object3->GetMesh()->IndexCount, 0, 0);
+
+    //// Draws a plane
+    //world = XMLoadFloat4x4(&plane->GetTransform());
+    //cb.mWorld = XMMatrixTranspose(world);
+    //_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+
+    //_pImmediateContext->IASetVertexBuffers(0, 1, &plane->GetMesh()->VertexBuffer, &plane->GetMesh()->VBStride, &plane->GetMesh()->VBOffset);
+    //_pImmediateContext->IASetIndexBuffer(plane->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    //_pImmediateContext->DrawIndexed(plane->GetMesh()->IndexCount, 0, 0);
 
     // Present our back buffer to our front buffer
     _pSwapChain->Present(0, 0);

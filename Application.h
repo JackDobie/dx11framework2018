@@ -75,10 +75,10 @@ private:
 	XMFLOAT4				EyePosW;
 	//MeshData				objMeshData;
 	Camera*					cam;
-	GameObject*				currentObject;
 	GameObject*				object1;
 	GameObject*				object2;
 	GameObject*				object3;
+	GameObject*				plane;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
