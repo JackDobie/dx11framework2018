@@ -2,6 +2,8 @@
 
 #include <directxmath.h>
 #include <tgmath.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 using namespace DirectX;
 
@@ -13,6 +15,7 @@ private:
 	XMFLOAT4 _eye;
 	XMFLOAT4 _at;
 	XMFLOAT4 _up;
+	XMFLOAT4 _right;
 
 	float _windowWidth;
 	float _windowHeight;
@@ -28,6 +31,7 @@ public:
 
 	void Update();
 
+	// functions to set values
 	void SetPos(XMFLOAT4 newEye);
 	void SetAt(XMFLOAT4 newAt);
 	void SetUp(XMFLOAT4 newUp);
@@ -36,13 +40,16 @@ public:
 	void AddAt(XMFLOAT4 addAt);
 
 	void LookAt(XMFLOAT4 pos);
+	XMFLOAT3 Rotate(float dx, float dy, float dz, XMFLOAT3 original);
 
+	void Move(float speed);
+	void Strafe(float speed);
+
+	// functions to return values
 	XMFLOAT4 GetPos();
 	XMFLOAT4 GetAt();
 	XMFLOAT4 GetUp();
 	float GetAngle(XMFLOAT4 pos1, XMFLOAT4 pos2);
-
-	XMFLOAT3 Rotate(float dx, float dy, float dz);
 
 	XMFLOAT4X4 GetView();
 	XMFLOAT4X4 GetProjection();

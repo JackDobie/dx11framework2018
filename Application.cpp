@@ -71,17 +71,10 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     plane = new GameObject(OBJLoader::Load("Models/plane.obj", _pd3dDevice), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Initialize the view matrix
-    XMFLOAT4 Eye = XMFLOAT4(0.0f, 2.0f, -1.0f, 0.0f);
+    XMFLOAT4 Eye = XMFLOAT4(0.0f, 1.0f, -4.0f, 0.0f);
     XMFLOAT4 At = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
-    //XMVECTOR At = XMVectorSet(-2.5f, -4.0f, -1.0f, 0.0f);
     XMFLOAT4 Up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
     cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 100.0f);
-    // point towards = target point - initial point
-    //XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-
-    //point towards object 2
-    //cam->LookAt(object2->GetPosition());
-    //cam->SetAt(XMFLOAT4(object2->GetPosition().x - cam->GetAt().x, object2->GetPosition().y - cam->GetAt().y, object2->GetPosition().z - cam->GetAt().z, object2->GetPosition().w - cam->GetAt().w));
 
 	return S_OK;
 }
@@ -424,101 +417,93 @@ void Application::Update()
         rasterState = rasterState == 0 ? 1 : 0;
     }
 
-    if (GetAsyncKeyState(VK_ESCAPE) & 0x8000 != 0)//if escape is pressed down
-    {
-        //unlock cursor
-    }
-    else if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 != 0)//if left mouse is pressed down
-    {
-        //lock cursor
-    }
+    //if (GetAsyncKeyState(VK_ESCAPE) & 0x8000 != 0)//if escape is pressed down
+    //{
+    //    //unlock cursor
+    //}
+    //else if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 != 0)//if left mouse is pressed down
+    //{
+    //    //lock cursor
+    //}
 
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
         //move cam forwards
-        cam->AddPos(XMFLOAT4(0.0f, 0.0f, 0.01f, 0.0f));
-        //cam->Move(XMFLOAT4(0.0f, 0.0f, 0.01f, 0.0f));
-        //cam->AddAt(XMFLOAT4(0.0f, 0.0f, 0.01f, 0.0f));
+        cam->Move(0.001f);
     }
     else if (GetAsyncKeyState(0x53) & 0x8000)//if S is pressed down
     {
         //move cam backwards
-        cam->AddPos(XMFLOAT4(0.0f, 0.0f, -0.01f, 0.0f));
-        //cam->Move(XMFLOAT4(0.0f, 0.0f, -0.01f, 0.0f));
-        //cam->AddAt(XMFLOAT4(0.0f, 0.0f, -0.01f, 0.0f));
+        cam->Move(-0.001f);
     }
     if (GetAsyncKeyState(0x41) & 0x8000)//if A is pressed down
     {
         //move cam left
-        cam->AddPos(XMFLOAT4(-0.01f, 0.0f, 0.0f, 0.0f));
-        //cam->Move(XMFLOAT4(-0.01f, 0.0f, 0.0f, 0.0f));
-        //cam->AddAt(XMFLOAT4(-0.01f, 0.0f, 0.0f, 0.0f));
+        cam->Strafe(-0.001f);
     }
     else if (GetAsyncKeyState(0x44) & 0x8000)//if D is pressed down
     {
         //move cam right
-        cam->AddPos(XMFLOAT4(0.01f, 0.0f, 0.0f, 0.0f));
-        //cam->Move(XMFLOAT4(0.01f, 0.0f, 0.0f, 0.0f));
-        //cam->AddAt(XMFLOAT4(0.01f, 0.0f, 0.0f, 0.0f));
+        cam->Strafe(0.001f);
     }
 
     if (GetAsyncKeyState(VK_UP) & 0x8000)//if up arrow is pressed
     {
         //point cam up
-        cam->AddAt(XMFLOAT4(0.0f, 0.001f, 0.0f, 0.0f));
+        cam->AddAt(XMFLOAT4(0.0f, -0.025f, 0.0f, 0.0f));
     }
     else if (GetAsyncKeyState(VK_DOWN) & 0x8000)//if down arrow is pressed
     {
         //point cam down
-        cam->AddAt(XMFLOAT4(0.0f, -0.001f, 0.0f, 0.0f));
+        cam->AddAt(XMFLOAT4(0.0f, 0.025f, 0.0f, 0.0f));
     }
     if (GetAsyncKeyState(VK_LEFT) & 0x8000)//if left arrow is pressed
     {
         //point cam up
-        cam->AddAt(XMFLOAT4(0.0f, 0.0f, -0.001f, 0.0f));
+        cam->AddAt(XMFLOAT4(0.0f, 0.0f, -0.025f, 0.0f));
     }
     else if (GetAsyncKeyState(VK_RIGHT) & 0x8000)//if right arrow is pressed
     {
         //point cam down
-        cam->AddAt(XMFLOAT4(0.0f, 0.0f, 0.001f, 0.0f));
+        cam->AddAt(XMFLOAT4(0.0f, 0.0f, 0.025f, 0.0f));
     }
 
     if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000 != 0)//if numpad1 is pressed down
     {
         //point cam up
         XMFLOAT4 obj1Pos = object1->GetPosition();
-        object1->SetPosition(XMFLOAT4(obj1Pos.x + 5.0f, obj1Pos.y, obj1Pos.z, obj1Pos.z));
+        object1->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f, obj1Pos.z));
     }
     else if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000 != 0)//if numpad4 is pressed down
     {
         //point cam up
         XMFLOAT4 obj1Pos = object1->GetPosition();
-        object1->SetPosition(XMFLOAT4(obj1Pos.x - 5.0f, obj1Pos.y, obj1Pos.z, obj1Pos.z));
+        object1->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z - 5.0f, obj1Pos.z));
     }
     if (GetAsyncKeyState(VK_NUMPAD2) & 0x8000 != 0)//if numpad2 is pressed down
     {
         //point cam up
         XMFLOAT4 obj2Pos = object2->GetPosition();
-        object2->SetPosition(XMFLOAT4(obj2Pos.x + 5.0f, obj2Pos.y, obj2Pos.z, obj2Pos.z));
+        object2->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z + 5.0f, obj2Pos.z));
     }
     else if (GetAsyncKeyState(VK_NUMPAD5) & 0x8000 != 0)//if numpad5 is pressed down
     {
         //point cam up
         XMFLOAT4 obj2Pos = object2->GetPosition();
-        object2->SetPosition(XMFLOAT4(obj2Pos.x - 5.0f, obj2Pos.y, obj2Pos.z, obj2Pos.z));
+        object2->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z - 5.0f, obj2Pos.z));
     }
 
     if (GetAsyncKeyState(VK_NUMPAD3) & 0x8000 != 0)//if numpad3 is pressed down
     {
         //point cam up
         XMFLOAT4 obj3Pos = object3->GetPosition();
-        object3->SetPosition(XMFLOAT4(obj3Pos.x + 5.0f, obj3Pos.y, obj3Pos.z, obj3Pos.z));
+        object3->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z + 5.0f, obj3Pos.z));
     }
     else if (GetAsyncKeyState(VK_NUMPAD6) & 0x8000 != 0)//if numpad6 is pressed down
     {
         //point cam up
         XMFLOAT4 obj3Pos = object3->GetPosition();
-        object3->SetPosition(XMFLOAT4(obj3Pos.x - 5.0f, obj3Pos.y, obj3Pos.z, obj3Pos.z));
+        object3->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z - 5.0f, obj3Pos.z));
     }
 
     if (GetAsyncKeyState(0x52) & 0x8000 != 0)//if r is pressed down
