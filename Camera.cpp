@@ -52,18 +52,58 @@ void Camera::AddAt(XMFLOAT4 addAt)
 	//_at = XMFLOAT4(newAt.x + addAt.x, newAt.y + addAt.y, newAt.z + addAt.z, newAt.w + addAt.w);
 
 	XMFLOAT4 added = XMFLOAT4(_at.x + addAt.x, _at.y + addAt.y, _at.z + addAt.z, _at.w + addAt.w);
-	float angle = GetAngle(added, XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
-	XMVECTOR vec = Rotate(angle);
-	XMStoreFloat4(&_at, vec);
+	float dx = added.x - _at.x;
+	float dy = added.y - _at.y;
+	float dz = added.z - _at.z;
+	XMFLOAT3 rot = Rotate(dx, dy, dz);
+	_at = XMFLOAT4(rot.x, rot.y, rot.z, _at.w);
+	//float angle = GetAngle(added, XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
+	/*XMFLOAT4 rotat = Rotate(_at.x, _at.z, angle, _eye);
+	_at = XMFLOAT4(rotat.x, _at.y, rotat.z, _at.w);*/
 }
 
-XMVECTOR Camera::Rotate(float angle)
+XMFLOAT3 Camera::Rotate(float dx, float dy, float dz)
 {
-	XMMATRIX m = XMMatrixTranslation(_eye.x, _eye.y, _eye.z) * XMMatrixRotationZ(angle);
+	//XMMATRIX Yrot = XMMatrixRotationY(angle);
+	//XMMATRIX Xrot = XMMatrixRotationX(angle);
+	XMMATRIX r = XMMatrixRotationRollPitchYaw(dy, dz, dx);
+	XMFLOAT3 out = XMFLOAT3(_at.x, _at.y, _at.z);
+	XMStoreFloat3(&out, XMVector3TransformNormal(XMLoadFloat3(&out), r));
+	return out;
 
-	XMVECTOR vec = XMVECTOR();
-	vec = XMVector3Transform(XMVectorSet(_at.x, _at.y, _at.z, _at.w), m);
-	return vec;
+	//XMVECTOR vec = XMVECTOR();
+	//XMFLOAT3 target = XMFLOAT3(_eye.x, _eye.y, _eye.z);
+	//XMMATRIX r = XMMatrixRotationAxis(XMLoadFloat3(&target), angle);
+
+	//XMStoreFloat3(&target, XMVector3TransformNormal(XMLoadFloat3(&target), r));
+	////XMStoreFloat3(&mLook, XMVector3TransformNormal(XMLoadFloat3(&mLook), r));
+	//_eye = XMFLOAT4(target.x, target.y, target.z, _eye.w);
+
+
+
+	//float s = sin(angle);
+	//float c = cos(angle);
+
+	////translate point to origin
+	//point.x -= cx;
+	//point.z -= cz;
+
+	////rotate point
+	//float xnew = point.x * c - point.z * s;
+	//float znew = point.x * s + point.z * c;
+
+	////translate point back;
+	//point.x = xnew + cx;
+	//point.z = znew + cz;
+
+	//return point;
+
+
+	/*float cx_rot, cz_rot;
+	XMFLOAT4 origin = _eye;
+	cx_rot = ((cx - origin.x) * cos(angle)) - ((origin.z - cz) * sin(angle)) + origin.x;
+	cz_rot = ((origin.z - cz) * cos(angle)) - ((cx - origin.x) * sin(angle)) + origin.z;
+	return XMFLOAT4(cx_rot, 0.0f, cz_rot, 0.0f);*/
 }
 
 void Camera::LookAt(XMFLOAT4 pos)

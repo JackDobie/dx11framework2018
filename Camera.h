@@ -42,7 +42,7 @@ public:
 	XMFLOAT4 GetUp();
 	float GetAngle(XMFLOAT4 pos1, XMFLOAT4 pos2);
 
-	XMVECTOR Rotate(float angle);
+	XMFLOAT3 Rotate(float dx, float dy, float dz);
 
 	XMFLOAT4X4 GetView();
 	XMFLOAT4X4 GetProjection();
