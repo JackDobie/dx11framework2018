@@ -106,5 +106,6 @@ public:
 
 	void Update();
 	void Draw();
+	void Inputs();
 };
 

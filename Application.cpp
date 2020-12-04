@@ -410,8 +410,20 @@ void Application::Update()
         t = (dwTimeCur - dwTimeStart) / 1000.0f;
     }
 
+    Inputs();
+
+    object1->Update();
+    object2->Update();
+    object3->Update();
+    plane->Update();
+    cam->Update();
+}
+
+void Application::Inputs()
+{
     // https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
     //0x8000 is when key is held
+    //`& 0x8000 != 0` gets when the key is just pressed down, not held
     if (GetAsyncKeyState(VK_SPACE) & 0x8000 != 0)//if space is pressed down
     {
         rasterState = rasterState == 0 ? 1 : 0;
@@ -511,12 +523,6 @@ void Application::Update()
         //look at object 2
         cam->LookAt(object2->GetPosition());
     }
-
-    object1->Update();
-    object2->Update();
-    object3->Update();
-    plane->Update();
-    cam->Update();
 }
 
 void Application::Draw()
