@@ -65,10 +65,10 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
-    object1 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    object2 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    object3 = new GameObject(OBJLoader::Load("Models/star.obj", _pd3dDevice), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    plane = new GameObject(OBJLoader::Load("Models/plane.obj", _pd3dDevice), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    object1 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    object2 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    object3 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    plane = new GameObject(LoadMesh("Models/plane.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Initialize the view matrix
     XMFLOAT4 Eye = XMFLOAT4(0.0f, 1.0f, -4.0f, 0.0f);
@@ -429,12 +429,12 @@ void Application::Update()
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
         //move cam forwards
-        cam->Move(0.001f);
+        cam->Move(0.0005f);
     }
     else if (GetAsyncKeyState(0x53) & 0x8000)//if S is pressed down
     {
         //move cam backwards
-        cam->Move(-0.001f);
+        cam->Move(-0.0005f);
     }
     if (GetAsyncKeyState(0x41) & 0x8000)//if A is pressed down
     {
@@ -515,6 +515,7 @@ void Application::Update()
     object1->Update();
     object2->Update();
     object3->Update();
+    plane->Update();
     cam->Update();
 }
 
@@ -591,14 +592,14 @@ void Application::Draw()
     _pImmediateContext->IASetIndexBuffer(object3->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(object3->GetMesh()->IndexCount, 0, 0);
 
-    //// Draws a plane
-    //world = XMLoadFloat4x4(&plane->GetTransform());
-    //cb.mWorld = XMMatrixTranspose(world);
-    //_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    // Draws a plane
+    world = XMLoadFloat4x4(&plane->GetTransform());
+    cb.mWorld = XMMatrixTranspose(world);
+    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    //_pImmediateContext->IASetVertexBuffers(0, 1, &plane->GetMesh()->VertexBuffer, &plane->GetMesh()->VBStride, &plane->GetMesh()->VBOffset);
-    //_pImmediateContext->IASetIndexBuffer(plane->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    //_pImmediateContext->DrawIndexed(plane->GetMesh()->IndexCount, 0, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &plane->GetMesh()->VertexBuffer, &plane->GetMesh()->VBStride, &plane->GetMesh()->VBOffset);
+    _pImmediateContext->IASetIndexBuffer(plane->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->DrawIndexed(plane->GetMesh()->IndexCount, 0, 0);
 
     // Present our back buffer to our front buffer
     _pSwapChain->Present(0, 0);
