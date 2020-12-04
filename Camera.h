@@ -36,7 +36,6 @@ public:
 	void SetAt(XMFLOAT4 newAt);
 	void SetUp(XMFLOAT4 newUp);
 
-	void AddPos(XMFLOAT4 addEye);
 	void AddAt(XMFLOAT4 addAt);
 
 	void LookAt(XMFLOAT4 pos);
@@ -49,7 +48,7 @@ public:
 	XMFLOAT4 GetPos();
 	XMFLOAT4 GetAt();
 	XMFLOAT4 GetUp();
-	float GetAngle(XMFLOAT4 pos1, XMFLOAT4 pos2);
+	//float GetAngle(XMFLOAT4 pos1, XMFLOAT4 pos2);
 
 	XMFLOAT4X4 GetView();
 	XMFLOAT4X4 GetProjection();

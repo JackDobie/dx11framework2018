@@ -24,10 +24,6 @@ void Camera::SetAt(XMFLOAT4 newAt)
 	_at = newAt;
 }
 
-void Camera::AddPos(XMFLOAT4 addEye)
-{
-	_eye = XMFLOAT4(_eye.x + addEye.x, _eye.y + addEye.y, _eye.z + addEye.z, _eye.w + addEye.w);
-}
 void Camera::AddAt(XMFLOAT4 addAt)
 {
 	//add passed in float4 to current camera target
@@ -50,6 +46,7 @@ void Camera::Move(float speed)
 	XMVECTOR amount = XMVectorReplicate(speed);
 	XMVECTOR target = XMLoadFloat4(&_at);
 	XMVECTOR pos = XMLoadFloat4(&_eye);
+	//multiply forward vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, target, pos));
 	_eye = XMFLOAT4(out.x, _eye.y, out.z, out.w);
@@ -59,6 +56,7 @@ void Camera::Strafe(float speed)
 	XMVECTOR amount = XMVectorReplicate(speed);
 	XMVECTOR right = XMLoadFloat4(&_right);
 	XMVECTOR pos = XMLoadFloat4(&_eye);
+	//multiply right facing vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, right, pos));
 	_eye = XMFLOAT4(out.x, _eye.y, out.z, out.w);
