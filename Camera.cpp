@@ -67,6 +67,15 @@ XMFLOAT3 Camera::Rotate(float dx, float dy, float dz, XMFLOAT3 original)
 	dx = XMConvertToRadians(dx);
 	dy = XMConvertToRadians(dy);
 	dz = XMConvertToRadians(dz);
+
+	float angle = GetAngle(XMFLOAT3(_at.x, _at.y, _at.z), XMFLOAT3(0.0f, 0.0f, 0.0f));
+	if (angle > 90.0f && angle < 270)
+	{
+		dy = -dy;
+	}
+	//FXMVECTOR angle = XMVector3AngleBetweenVectors(XMLoadFloat3(&original), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f));
+
+
 	//create rotation matrix
 	XMMATRIX r = XMMatrixRotationRollPitchYaw(dy, dz, dx);
 	//create transform float3 with rotation matrix
@@ -100,6 +109,14 @@ XMFLOAT4X4 Camera::GetView()
 XMFLOAT4X4 Camera::GetProjection()
 {
 	return _projection;
+}
+
+float Camera::GetAngle(XMFLOAT3 pos1, XMFLOAT3 pos2)
+{
+	float n = 270 - atan2(pos2.z - pos1.z, pos2.x - pos1.x) * 180 / M_PI;
+	float angle = fmod(n, 360);
+
+	return angle;
 }
 
 void Camera::Reshape(float windowWidth, float windowHeight, float nearDepth, float farDepth)

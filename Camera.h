@@ -4,6 +4,7 @@
 #include <tgmath.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <cmath>
 
 using namespace DirectX;
 
@@ -48,7 +49,7 @@ public:
 	XMFLOAT4 GetPos();
 	XMFLOAT4 GetAt();
 	XMFLOAT4 GetUp();
-	//float GetAngle(XMFLOAT4 pos1, XMFLOAT4 pos2);
+	float GetAngle(XMFLOAT3 pos1, XMFLOAT3 pos2);
 
 	XMFLOAT4X4 GetView();
 	XMFLOAT4X4 GetProjection();

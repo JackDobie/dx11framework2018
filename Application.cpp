@@ -68,7 +68,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     object1 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     object2 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     object3 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    plane = new GameObject(LoadMesh("Models/plane.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    plane = new GameObject(LoadMesh("Models/plane.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(8.0f, 8.0f, 8.0f, 8.0f));
 
     // Initialize the view matrix
     XMFLOAT4 Eye = XMFLOAT4(0.0f, 1.0f, -4.0f, 0.0f);
