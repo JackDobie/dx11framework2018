@@ -68,7 +68,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     object1 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     object2 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     object3 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    plane = new GameObject(LoadMesh("Models/plane.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(8.0f, 8.0f, 8.0f, 8.0f));
+    room = new GameObject(LoadMesh("Models/RoomNoRoof.obj"), XMFLOAT4(0.0f, 4.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
     // Initialize the view matrix
     XMFLOAT4 Eye = XMFLOAT4(0.0f, 1.0f, -4.0f, 0.0f);
@@ -415,7 +415,7 @@ void Application::Update()
     object1->Update();
     object2->Update();
     object3->Update();
-    plane->Update();
+    room->Update();
     cam->Update();
 }
 
@@ -429,14 +429,10 @@ void Application::Inputs()
         rasterState = rasterState == 0 ? 1 : 0;
     }
 
-    //if (GetAsyncKeyState(VK_ESCAPE) & 0x8000 != 0)//if escape is pressed down
-    //{
-    //    //unlock cursor
-    //}
-    //else if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 != 0)//if left mouse is pressed down
-    //{
-    //    //lock cursor
-    //}
+    if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 != 0)//if left mouse is pressed down
+    {
+        MousePick();
+    }
 
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
@@ -469,7 +465,7 @@ void Application::Inputs()
         //point cam down
         cam->AddAt(XMFLOAT4(0.0f, 0.025f, 0.0f, 0.0f));
     }
-    if (GetAsyncKeyState(VK_LEFT) & 0x8000)//if left arrow is pressed
+    else if (GetAsyncKeyState(VK_LEFT) & 0x8000)//if left arrow is pressed
     {
         //point cam up
         cam->AddAt(XMFLOAT4(0.0f, 0.0f, -0.025f, 0.0f));
@@ -547,8 +543,9 @@ void Application::Draw()
     ambientLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
     specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-    specularPower = 10.0f;
-    EyePosW = XMFLOAT4(0.0f, 4.0f, -1.0f, 0.0f);
+    specularPower = 5.0f;
+    EyePosW = cam->GetPos();
+    //EyePosW = XMFLOAT4(0.0f, 4.0f, -1.0f, 0.0f);
 
     ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(world);
@@ -598,14 +595,14 @@ void Application::Draw()
     _pImmediateContext->IASetIndexBuffer(object3->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     _pImmediateContext->DrawIndexed(object3->GetMesh()->IndexCount, 0, 0);
 
-    // Draws a plane
-    world = XMLoadFloat4x4(&plane->GetTransform());
+    // Draws the room
+    world = XMLoadFloat4x4(&room->GetTransform());
     cb.mWorld = XMMatrixTranspose(world);
     _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    _pImmediateContext->IASetVertexBuffers(0, 1, &plane->GetMesh()->VertexBuffer, &plane->GetMesh()->VBStride, &plane->GetMesh()->VBOffset);
-    _pImmediateContext->IASetIndexBuffer(plane->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(plane->GetMesh()->IndexCount, 0, 0);
+    _pImmediateContext->IASetVertexBuffers(0, 1, &room->GetMesh()->VertexBuffer, &room->GetMesh()->VBStride, &room->GetMesh()->VBOffset);
+    _pImmediateContext->IASetIndexBuffer(room->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    _pImmediateContext->DrawIndexed(room->GetMesh()->IndexCount, 0, 0);
 
     // Present our back buffer to our front buffer
     _pSwapChain->Present(0, 0);
@@ -622,4 +619,9 @@ void Application::LoadTexture(string path)
     CreateDDSTextureFromFile(_pd3dDevice, (wchar_t*)path.c_str(), nullptr, &_pTextureRV);
 
     _pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
+}
+
+void Application::MousePick()
+{
+
 }

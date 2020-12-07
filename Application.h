@@ -78,7 +78,7 @@ private:
 	GameObject*				object1;
 	GameObject*				object2;
 	GameObject*				object3;
-	GameObject*				plane;
+	GameObject*				room;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
@@ -107,5 +107,6 @@ public:
 	void Update();
 	void Draw();
 	void Inputs();
+	void MousePick();
 };
 
