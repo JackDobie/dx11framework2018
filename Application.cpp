@@ -623,5 +623,39 @@ void Application::LoadTexture(string path)
 
 void Application::MousePick()
 {
+    POINT mousePos;
+    GetCursorPos(&mousePos);
 
+    XMMATRIX invView = XMMatrixInverse(nullptr, XMLoadFloat4x4(&cam->GetView()));
+    XMMATRIX invProj = XMMatrixInverse(nullptr, XMLoadFloat4x4(&cam->GetProjection()));
+
+    //convert pixel selected to a normalised screen coordinate
+
+    float fNormalisedScreenCoordinates[2];
+    fNormalisedScreenCoordinates[0] = (2.0f * mousePos.x) / _WindowWidth - 1.0f;
+    fNormalisedScreenCoordinates[1] = 1.0f - (2.0f * mousePos.y) / _WindowHeight;
+
+    //extract the camera position from the view matrix
+
+    XMVECTOR eyePos;
+    XMVECTOR dummy;
+    XMMatrixDecompose(&dummy, &dummy, &eyePos, invView);
+
+    //convert normalised screen coordinated from projection to view space
+
+    XMVECTOR rayOrigin = XMVectorSet(fNormalisedScreenCoordinates[0], fNormalisedScreenCoordinates[1], 0, 0);
+    rayOrigin = XMVector3Transform(rayOrigin, invProj);
+    //at this point the origin will be pointing down the +Z axis (left handed) or -Z axis (right handed)
+
+    //convert result from view to world space
+
+    rayOrigin = XMVector3Transform(rayOrigin, invView);
+
+    //subtract the eye position from this ray to producte a ray direction
+
+    XMVECTOR rayDir = rayOrigin - eyePos;
+
+    //normalise the ray, or ray intersections won't work properly
+
+    rayDir = XMVector3Normalize(rayDir);
 }
