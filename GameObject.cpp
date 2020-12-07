@@ -30,6 +30,17 @@ void GameObject::SetTransform(XMFLOAT4X4 transform)
 	_transform = transform;
 }
 
+void GameObject::SetCollisionRadius(float radius)
+{
+
+	BoundingSphere sphere;
+}
+
+void GameObject::SetCollisionBox()
+{
+
+}
+
 void GameObject::Update()
 {
 	XMStoreFloat4x4(&_transform, XMMatrixScaling(_scale.x, _scale.y, _scale.z) * XMMatrixRotationRollPitchYaw(_rotation.x, _rotation.y, _rotation.z) * XMMatrixTranslation(_position.x, _position.y, _position.z));

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <DirectXCollision.h>
 #include "OBJLoader.h"
 
 class GameObject
@@ -11,6 +12,9 @@ private:
 	XMFLOAT4X4 _transform;
 
 	MeshData _mesh;
+
+	bool CollisionRadius = false;
+	bool CollisionBox = false;
 public:
 	GameObject(MeshData mesh, XMFLOAT4 position, XMFLOAT4 rotation, XMFLOAT4 scale);
 
@@ -20,6 +24,9 @@ public:
 	void SetRotation(XMFLOAT4 rotation);
 	void SetScale(XMFLOAT4 scale);
 	void SetTransform(XMFLOAT4X4 transform);
+
+	void SetCollisionRadius(float radius);
+	void SetCollisionBox();
 
 	void Update();
 

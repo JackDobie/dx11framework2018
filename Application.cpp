@@ -65,10 +65,10 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
-    object1 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    object2 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    object3 = new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    room = new GameObject(LoadMesh("Models/RoomNoRoof.obj"), XMFLOAT4(0.0f, 4.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
+    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
+    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
+    objects.push_back(new GameObject(LoadMesh("Models/RoomNoRoof.obj"), XMFLOAT4(0.0f, 4.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
 
     // Initialize the view matrix
     XMFLOAT4 Eye = XMFLOAT4(0.0f, 1.0f, -4.0f, 0.0f);
@@ -412,10 +412,10 @@ void Application::Update()
 
     Inputs();
 
-    object1->Update();
-    object2->Update();
-    object3->Update();
-    room->Update();
+    for each (GameObject* obj in objects)
+    {
+        obj->Update();
+    }
     cam->Update();
 }
 
@@ -479,45 +479,45 @@ void Application::Inputs()
     if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000 != 0)//if numpad1 is pressed down
     {
         //point cam up
-        XMFLOAT4 obj1Pos = object1->GetPosition();
-        object1->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f, obj1Pos.z));
+        XMFLOAT4 obj1Pos = objects[0]->GetPosition();
+        objects[0]->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f, obj1Pos.z));
     }
     else if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000 != 0)//if numpad4 is pressed down
     {
         //point cam up
-        XMFLOAT4 obj1Pos = object1->GetPosition();
-        object1->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z - 5.0f, obj1Pos.z));
+        XMFLOAT4 obj1Pos = objects[0]->GetPosition();
+        objects[0]->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z - 5.0f, obj1Pos.z));
     }
     if (GetAsyncKeyState(VK_NUMPAD2) & 0x8000 != 0)//if numpad2 is pressed down
     {
         //point cam up
-        XMFLOAT4 obj2Pos = object2->GetPosition();
-        object2->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z + 5.0f, obj2Pos.z));
+        XMFLOAT4 obj2Pos = objects[1]->GetPosition();
+        objects[1]->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z + 5.0f, obj2Pos.z));
     }
     else if (GetAsyncKeyState(VK_NUMPAD5) & 0x8000 != 0)//if numpad5 is pressed down
     {
         //point cam up
-        XMFLOAT4 obj2Pos = object2->GetPosition();
-        object2->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z - 5.0f, obj2Pos.z));
+        XMFLOAT4 obj2Pos = objects[1]->GetPosition();
+        objects[1]->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z - 5.0f, obj2Pos.z));
     }
 
     if (GetAsyncKeyState(VK_NUMPAD3) & 0x8000 != 0)//if numpad3 is pressed down
     {
         //point cam up
-        XMFLOAT4 obj3Pos = object3->GetPosition();
-        object3->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z + 5.0f, obj3Pos.z));
+        XMFLOAT4 obj3Pos = objects[2]->GetPosition();
+        objects[2]->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z + 5.0f, obj3Pos.z));
     }
     else if (GetAsyncKeyState(VK_NUMPAD6) & 0x8000 != 0)//if numpad6 is pressed down
     {
         //point cam up
-        XMFLOAT4 obj3Pos = object3->GetPosition();
-        object3->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z - 5.0f, obj3Pos.z));
+        XMFLOAT4 obj3Pos = objects[2]->GetPosition();
+        objects[2]->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z - 5.0f, obj3Pos.z));
     }
 
     if (GetAsyncKeyState(0x52) & 0x8000 != 0)//if r is pressed down
     {
         //look at object 2
-        cam->LookAt(object2->GetPosition());
+        cam->LookAt(objects[1]->GetPosition());
     }
 }
 
@@ -531,7 +531,6 @@ void Application::Draw()
 
     _pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	XMMATRIX world = XMLoadFloat4x4(&object1->GetTransform());
 	XMMATRIX view = XMLoadFloat4x4(&cam->GetView());
 	XMMATRIX projection = XMLoadFloat4x4(&cam->GetProjection());
 
@@ -544,11 +543,10 @@ void Application::Draw()
     specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
     specularPower = 5.0f;
-    EyePosW = cam->GetPos();
-    //EyePosW = XMFLOAT4(0.0f, 4.0f, -1.0f, 0.0f);
+    //EyePosW = cam->GetPos();
+    EyePosW = XMFLOAT4(0.0f, 4.0f, -1.0f, 0.0f);
 
     ConstantBuffer cb;
-	cb.mWorld = XMMatrixTranspose(world);
 	cb.mView = XMMatrixTranspose(view);
 	cb.mProjection = XMMatrixTranspose(projection);
     cb.DiffuseMtrl = diffuseMaterial;
@@ -562,47 +560,22 @@ void Application::Draw()
     cb.EyePosW = EyePosW;
 
 
-	_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-    // Draws first object
-	_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
-	_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
+    _pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
+    _pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
     _pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
-	_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
+    _pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
 
-    UINT stride = sizeof(SimpleVertex);
-    UINT offset = 0;
 
-    _pImmediateContext->IASetVertexBuffers(0, 1, &object1->GetMesh()->VertexBuffer, &object1->GetMesh()->VBStride, &object1->GetMesh()->VBOffset);
-    _pImmediateContext->IASetIndexBuffer(object1->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(object1->GetMesh()->IndexCount, 0, 0);
+    for each (GameObject* obj in objects)
+    {
+        XMMATRIX world = XMLoadFloat4x4(&obj->GetTransform());
+        cb.mWorld = XMMatrixTranspose(world);
+        _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    // Draws second object
-    world = XMLoadFloat4x4(&object2->GetTransform());
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-    _pImmediateContext->IASetVertexBuffers(0, 1, &object2->GetMesh()->VertexBuffer, &object2->GetMesh()->VBStride, &object2->GetMesh()->VBOffset);
-    _pImmediateContext->IASetIndexBuffer(object2->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(object2->GetMesh()->IndexCount, 0, 0);
-
-    // Draws third object
-    world = XMLoadFloat4x4(&object3->GetTransform());
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-    _pImmediateContext->IASetVertexBuffers(0, 1, &object3->GetMesh()->VertexBuffer, &object3->GetMesh()->VBStride, &object3->GetMesh()->VBOffset);
-    _pImmediateContext->IASetIndexBuffer(object3->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(object3->GetMesh()->IndexCount, 0, 0);
-
-    // Draws the room
-    world = XMLoadFloat4x4(&room->GetTransform());
-    cb.mWorld = XMMatrixTranspose(world);
-    _pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-    _pImmediateContext->IASetVertexBuffers(0, 1, &room->GetMesh()->VertexBuffer, &room->GetMesh()->VBStride, &room->GetMesh()->VBOffset);
-    _pImmediateContext->IASetIndexBuffer(room->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    _pImmediateContext->DrawIndexed(room->GetMesh()->IndexCount, 0, 0);
+        _pImmediateContext->IASetVertexBuffers(0, 1, &obj->GetMesh()->VertexBuffer, &obj->GetMesh()->VBStride, &obj->GetMesh()->VBOffset);
+        _pImmediateContext->IASetIndexBuffer(obj->GetMesh()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+        _pImmediateContext->DrawIndexed(obj->GetMesh()->IndexCount, 0, 0);
+    }
 
     // Present our back buffer to our front buffer
     _pSwapChain->Present(0, 0);

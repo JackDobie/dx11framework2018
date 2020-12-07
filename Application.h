@@ -63,7 +63,6 @@ private:
 	ID3D11Texture2D*		_depthStencilBuffer;
 	ID3D11RasterizerState*	_wireFrame;
 	ID3D11RasterizerState*	_solid;
-	//XMFLOAT4X4              _world, _world2, _world3, _world4, _world5, _world6;
 	XMFLOAT3				lightDirection;
 	XMFLOAT4				diffuseMaterial;
 	XMFLOAT4				diffuseLight;
@@ -73,12 +72,8 @@ private:
 	XMFLOAT4				specularLight;
 	float					specularPower;
 	XMFLOAT4				EyePosW;
-	//MeshData				objMeshData;
 	Camera*					cam;
-	GameObject*				object1;
-	GameObject*				object2;
-	GameObject*				object3;
-	GameObject*				room;
+	vector<GameObject*>		objects;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
