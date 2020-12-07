@@ -1,33 +1,33 @@
 #include "Camera.h"
 
-Camera::Camera(XMFLOAT4 position, XMFLOAT4 at, XMFLOAT4 up, float windowWidth, float windowHeight, float nearDepth, float farDepth)
+Camera::Camera(XMFLOAT3 position, XMFLOAT3 at, XMFLOAT3 up, float windowWidth, float windowHeight, float nearDepth, float farDepth)
 {
 	SetPos(position);
 	SetAt(at);
 	SetUp(up);
-	_right = XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f);
+	_right = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	Reshape(windowWidth, windowHeight, nearDepth, farDepth);
 
 	Update();
 }
 
-void Camera::SetPos(XMFLOAT4 newEye)
+void Camera::SetPos(XMFLOAT3 newEye)
 {
 	_eye = newEye;
 }
-void Camera::SetUp(XMFLOAT4 newUp)
+void Camera::SetUp(XMFLOAT3 newUp)
 {
 	_up = newUp;
 }
-void Camera::SetAt(XMFLOAT4 newAt)
+void Camera::SetAt(XMFLOAT3 newAt)
 {
 	_at = newAt;
 }
 
-void Camera::AddAt(XMFLOAT4 addAt)
+void Camera::AddAt(XMFLOAT3 addAt)
 {
 	//add passed in float4 to current camera target
-	XMFLOAT4 added = XMFLOAT4(_at.x + addAt.x, _at.y + addAt.y, _at.z + addAt.z, _at.w + addAt.w);
+	XMFLOAT3 added = XMFLOAT3(_at.x + addAt.x, _at.y + addAt.y, _at.z + addAt.z);
 	//get difference in xyz
 	float dx = added.x - _at.x;
 	float dy = added.y - _at.y;
@@ -35,31 +35,31 @@ void Camera::AddAt(XMFLOAT4 addAt)
 	//apply rotation to the passed in float4 and current camera target
 	XMFLOAT3 rot = XMFLOAT3(_at.x, _at.y, _at.z);
 	rot = Rotate(dx, dy, dz, rot);
-	_at = XMFLOAT4(rot.x, rot.y, rot.z, _at.w);
+	_at = XMFLOAT3(rot.x, rot.y, rot.z);
 
 	rot = XMFLOAT3(_right.x, _right.y, _right.z);
 	rot = Rotate(dx, dy, dz, rot);
-	_right = XMFLOAT4(rot.x, rot.y, rot.z, _right.w);
+	_right = XMFLOAT3(rot.x, rot.y, rot.z);
 }
 void Camera::Move(float speed)
 {
 	XMVECTOR amount = XMVectorReplicate(speed);
-	XMVECTOR target = XMLoadFloat4(&_at);
-	XMVECTOR pos = XMLoadFloat4(&_eye);
+	XMVECTOR target = XMLoadFloat3(&_at);
+	XMVECTOR pos = XMLoadFloat3(&_eye);
 	//multiply forward vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, target, pos));
-	_eye = XMFLOAT4(out.x, _eye.y, out.z, out.w);
+	_eye = XMFLOAT3(out.x, _eye.y, out.z);
 }
 void Camera::Strafe(float speed)
 {
 	XMVECTOR amount = XMVectorReplicate(speed);
-	XMVECTOR right = XMLoadFloat4(&_right);
-	XMVECTOR pos = XMLoadFloat4(&_eye);
+	XMVECTOR right = XMLoadFloat3(&_right);
+	XMVECTOR pos = XMLoadFloat3(&_eye);
 	//multiply right facing vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, right, pos));
-	_eye = XMFLOAT4(out.x, _eye.y, out.z, out.w);
+	_eye = XMFLOAT3(out.x, _eye.y, out.z);
 }
 
 XMFLOAT3 Camera::Rotate(float dx, float dy, float dz, XMFLOAT3 original)
@@ -84,20 +84,20 @@ XMFLOAT3 Camera::Rotate(float dx, float dy, float dz, XMFLOAT3 original)
 	return out;
 }
 
-void Camera::LookAt(XMFLOAT4 pos)
+void Camera::LookAt(XMFLOAT3 pos)
 {
-	_at = XMFLOAT4(pos.x - _eye.x, pos.y - _eye.y, pos.z - _eye.z, pos.w - _eye.w);
+	_at = XMFLOAT3(pos.x - _eye.x, pos.y - _eye.y, pos.z - _eye.z);
 }
 
-XMFLOAT4 Camera::GetPos()
+XMFLOAT3 Camera::GetPos()
 {
 	return _eye;
 }
-XMFLOAT4 Camera::GetAt()
+XMFLOAT3 Camera::GetAt()
 {
 	return _at;
 }
-XMFLOAT4 Camera::GetUp()
+XMFLOAT3 Camera::GetUp()
 {
 	return _up;
 }
@@ -130,8 +130,8 @@ void Camera::Reshape(float windowWidth, float windowHeight, float nearDepth, flo
 
 void Camera::Update()
 {
-	XMVECTOR eyeVec = XMVectorSet(_eye.x, _eye.y, _eye.z, _eye.w);
-	XMVECTOR atVec = XMVectorSet(_at.x, _at.y, _at.z, _at.w);
-	XMVECTOR upVec = XMVectorSet(_up.x, _up.y, _up.z, _up.w);
+	XMVECTOR eyeVec = XMLoadFloat3(&_eye);
+	XMVECTOR atVec = XMLoadFloat3(&_at);
+	XMVECTOR upVec = XMLoadFloat3(&_up);
 	XMStoreFloat4x4(&_view, XMMatrixLookToLH(eyeVec, atVec, upVec));
 }

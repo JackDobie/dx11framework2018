@@ -1,11 +1,12 @@
 #include "GameObject.h"
 
-GameObject::GameObject(MeshData mesh, XMFLOAT4 position, XMFLOAT4 rotation, XMFLOAT4 scale)
+GameObject::GameObject(MeshData mesh, XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale, float collisionRadius)
 {
 	_mesh = mesh;
 	_position = position;
 	_rotation = rotation;
 	_scale = scale;
+	boundingSphere.Radius = collisionRadius;
 }
 
 void GameObject::SetOBJ(MeshData mesh)
@@ -13,15 +14,15 @@ void GameObject::SetOBJ(MeshData mesh)
 	_mesh = mesh;
 }
 
-void GameObject::SetPosition(XMFLOAT4 position)
+void GameObject::SetPosition(XMFLOAT3 position)
 {
 	_position = position;
 }
-void GameObject::SetRotation(XMFLOAT4 rotation)
+void GameObject::SetRotation(XMFLOAT3 rotation)
 {
 	_rotation = rotation;
 }
-void GameObject::SetScale(XMFLOAT4 scale)
+void GameObject::SetScale(XMFLOAT3 scale)
 {
 	_scale = scale;
 }
@@ -32,29 +33,34 @@ void GameObject::SetTransform(XMFLOAT4X4 transform)
 
 void GameObject::SetCollisionRadius(float radius)
 {
-
-	BoundingSphere sphere;
+	boundingSphere.Radius = radius;
 }
 
-void GameObject::SetCollisionBox()
+bool GameObject::CheckCollision(XMFLOAT3 rayOrigin, XMFLOAT3 rayDir)
 {
-
+	float distance = 0.0f;
+	if (boundingSphere.Intersects(XMLoadFloat3(&rayOrigin), XMLoadFloat3(&rayDir), distance))
+	{
+		return true;
+	}
+	return false;
 }
 
 void GameObject::Update()
 {
 	XMStoreFloat4x4(&_transform, XMMatrixScaling(_scale.x, _scale.y, _scale.z) * XMMatrixRotationRollPitchYaw(_rotation.x, _rotation.y, _rotation.z) * XMMatrixTranslation(_position.x, _position.y, _position.z));
+	boundingSphere.Center = _position;
 }
 
-XMFLOAT4 GameObject::GetPosition()
+XMFLOAT3 GameObject::GetPosition()
 {
 	return _position;
 }
-XMFLOAT4 GameObject::GetRotation()
+XMFLOAT3 GameObject::GetRotation()
 {
 	return _rotation;
 }
-XMFLOAT4 GameObject::GetScale()
+XMFLOAT3 GameObject::GetScale()
 {
 	return _scale;
 }

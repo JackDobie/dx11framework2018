@@ -65,15 +65,15 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
-    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(-2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
-    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
-    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT4(2.5f, 0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
-    objects.push_back(new GameObject(LoadMesh("Models/RoomNoRoof.obj"), XMFLOAT4(0.0f, 4.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)));
+    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT3(-2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f));
+    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f));
+    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT3(2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f));
+    objects.push_back(new GameObject(LoadMesh("Models/RoomNoRoof.obj"), XMFLOAT3(0.0f, 4.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 0.0f));
 
     // Initialize the view matrix
-    XMFLOAT4 Eye = XMFLOAT4(0.0f, 1.0f, -4.0f, 0.0f);
-    XMFLOAT4 At = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
-    XMFLOAT4 Up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
+    XMFLOAT3 Eye = XMFLOAT3(0.0f, 1.0f, -4.0f);
+    XMFLOAT3 At = XMFLOAT3(0.0f, 0.0f, 1.0f);
+    XMFLOAT3 Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
     cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 100.0f);
 
 	return S_OK;
@@ -458,60 +458,54 @@ void Application::Inputs()
     if (GetAsyncKeyState(VK_UP) & 0x8000)//if up arrow is pressed
     {
         //point cam up
-        cam->AddAt(XMFLOAT4(0.0f, -0.025f, 0.0f, 0.0f));
+        cam->AddAt(XMFLOAT3(0.0f, -0.025f, 0.0f));
     }
     else if (GetAsyncKeyState(VK_DOWN) & 0x8000)//if down arrow is pressed
     {
         //point cam down
-        cam->AddAt(XMFLOAT4(0.0f, 0.025f, 0.0f, 0.0f));
+        cam->AddAt(XMFLOAT3(0.0f, 0.025f, 0.0f));
     }
     else if (GetAsyncKeyState(VK_LEFT) & 0x8000)//if left arrow is pressed
     {
         //point cam up
-        cam->AddAt(XMFLOAT4(0.0f, 0.0f, -0.025f, 0.0f));
+        cam->AddAt(XMFLOAT3(0.0f, 0.0f, -0.025f));
     }
     else if (GetAsyncKeyState(VK_RIGHT) & 0x8000)//if right arrow is pressed
     {
         //point cam down
-        cam->AddAt(XMFLOAT4(0.0f, 0.0f, 0.025f, 0.0f));
+        cam->AddAt(XMFLOAT3(0.0f, 0.0f, 0.025f));
     }
 
     if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000 != 0)//if numpad1 is pressed down
     {
-        //point cam up
-        XMFLOAT4 obj1Pos = objects[0]->GetPosition();
-        objects[0]->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f, obj1Pos.z));
+        XMFLOAT3 obj1Pos = objects[0]->GetPosition();
+        objects[0]->SetPosition(XMFLOAT3(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f));
     }
     else if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000 != 0)//if numpad4 is pressed down
     {
-        //point cam up
-        XMFLOAT4 obj1Pos = objects[0]->GetPosition();
-        objects[0]->SetPosition(XMFLOAT4(obj1Pos.x, obj1Pos.y, obj1Pos.z - 5.0f, obj1Pos.z));
+        XMFLOAT3 obj1Pos = objects[0]->GetPosition();
+        objects[0]->SetPosition(XMFLOAT3(obj1Pos.x, obj1Pos.y, obj1Pos.z - 5.0f));
     }
     if (GetAsyncKeyState(VK_NUMPAD2) & 0x8000 != 0)//if numpad2 is pressed down
     {
-        //point cam up
-        XMFLOAT4 obj2Pos = objects[1]->GetPosition();
-        objects[1]->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z + 5.0f, obj2Pos.z));
+        XMFLOAT3 obj2Pos = objects[1]->GetPosition();
+        objects[1]->SetPosition(XMFLOAT3(obj2Pos.x, obj2Pos.y, obj2Pos.z + 5.0f));
     }
     else if (GetAsyncKeyState(VK_NUMPAD5) & 0x8000 != 0)//if numpad5 is pressed down
     {
-        //point cam up
-        XMFLOAT4 obj2Pos = objects[1]->GetPosition();
-        objects[1]->SetPosition(XMFLOAT4(obj2Pos.x, obj2Pos.y, obj2Pos.z - 5.0f, obj2Pos.z));
+        XMFLOAT3 obj2Pos = objects[1]->GetPosition();
+        objects[1]->SetPosition(XMFLOAT3(obj2Pos.x, obj2Pos.y, obj2Pos.z - 5.0f));
     }
 
     if (GetAsyncKeyState(VK_NUMPAD3) & 0x8000 != 0)//if numpad3 is pressed down
     {
-        //point cam up
-        XMFLOAT4 obj3Pos = objects[2]->GetPosition();
-        objects[2]->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z + 5.0f, obj3Pos.z));
+        XMFLOAT3 obj3Pos = objects[2]->GetPosition();
+        objects[2]->SetPosition(XMFLOAT3(obj3Pos.x, obj3Pos.y, obj3Pos.z + 5.0f));
     }
     else if (GetAsyncKeyState(VK_NUMPAD6) & 0x8000 != 0)//if numpad6 is pressed down
     {
-        //point cam up
-        XMFLOAT4 obj3Pos = objects[2]->GetPosition();
-        objects[2]->SetPosition(XMFLOAT4(obj3Pos.x, obj3Pos.y, obj3Pos.z - 5.0f, obj3Pos.z));
+        XMFLOAT3 obj3Pos = objects[2]->GetPosition();
+        objects[2]->SetPosition(XMFLOAT3(obj3Pos.x, obj3Pos.y, obj3Pos.z - 5.0f));
     }
 
     if (GetAsyncKeyState(0x52) & 0x8000 != 0)//if r is pressed down
@@ -631,4 +625,20 @@ void Application::MousePick()
     //normalise the ray, or ray intersections won't work properly
 
     rayDir = XMVector3Normalize(rayDir);
+
+    //check if ray intersects with bounding sphere on objects
+
+    for each (GameObject* obj in objects)
+    {
+        if (obj->CheckCollision(cam->GetPos(), cam->GetAt()))
+        {
+            //hit
+            XMFLOAT3 obj1Pos = objects[0]->GetPosition();
+            obj->SetPosition(XMFLOAT3(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f));
+        }
+        else
+        {
+
+        }
+    }
 }

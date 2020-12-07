@@ -13,10 +13,10 @@ class Camera
 private:
 	// private attributes to store camera position and view volume
 
-	XMFLOAT4 _eye;
-	XMFLOAT4 _at;
-	XMFLOAT4 _up;
-	XMFLOAT4 _right;
+	XMFLOAT3 _eye;
+	XMFLOAT3 _at;
+	XMFLOAT3 _up;
+	XMFLOAT3 _right;
 
 	float _windowWidth;
 	float _windowHeight;
@@ -28,27 +28,27 @@ private:
 	XMFLOAT4X4 _projection;
 
 public:
-	Camera(XMFLOAT4 position, XMFLOAT4 at, XMFLOAT4 up, float windowWidth, float windowHeight, float nearDepth, float farDepth);
+	Camera(XMFLOAT3 position, XMFLOAT3 at, XMFLOAT3 up, float windowWidth, float windowHeight, float nearDepth, float farDepth);
 
 	void Update();
 
 	// functions to set values
-	void SetPos(XMFLOAT4 newEye);
-	void SetAt(XMFLOAT4 newAt);
-	void SetUp(XMFLOAT4 newUp);
+	void SetPos(XMFLOAT3 newEye);
+	void SetAt(XMFLOAT3 newAt);
+	void SetUp(XMFLOAT3 newUp);
 
-	void AddAt(XMFLOAT4 addAt);
+	void AddAt(XMFLOAT3 addAt);
 
-	void LookAt(XMFLOAT4 pos);
+	void LookAt(XMFLOAT3 pos);
 	XMFLOAT3 Rotate(float dx, float dy, float dz, XMFLOAT3 original);
 
 	void Move(float speed);
 	void Strafe(float speed);
 
 	// functions to return values
-	XMFLOAT4 GetPos();
-	XMFLOAT4 GetAt();
-	XMFLOAT4 GetUp();
+	XMFLOAT3 GetPos();
+	XMFLOAT3 GetAt();
+	XMFLOAT3 GetUp();
 	float GetAngle(XMFLOAT3 pos1, XMFLOAT3 pos2);
 
 	XMFLOAT4X4 GetView();
