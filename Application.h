@@ -108,6 +108,5 @@ public:
 	void Draw();
 	void Inputs();
 	void MousePick();
-	void DropObject(GameObject* object);
 };
 

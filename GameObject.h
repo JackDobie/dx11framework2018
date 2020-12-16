@@ -6,14 +6,13 @@
 class GameObject
 {
 private:
-	XMFLOAT3 _position;
-	XMFLOAT3 _rotation;
-	XMFLOAT3 _scale;
-	XMFLOAT4X4 _transform;
-
-	MeshData _mesh;
-
+	XMFLOAT3	_position;
+	XMFLOAT3	_rotation;
+	XMFLOAT3	_scale;
+	XMFLOAT4X4	_transform;
+	MeshData	_mesh;
 	BoundingSphere boundingSphere;
+	bool		_falling;
 
 public:
 	GameObject(MeshData mesh, XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale, float collisionRadius);
@@ -24,6 +23,7 @@ public:
 	void SetRotation(XMFLOAT3 rotation);
 	void SetScale(XMFLOAT3 scale);
 	void SetTransform(XMFLOAT4X4 transform);
+	void SetFalling(bool fall);
 
 	void MoveWithCam(float speed, XMVECTOR camTarget);
 	void StrafeWithCam(float speed, XMVECTOR camRight);
@@ -39,5 +39,6 @@ public:
 	XMFLOAT3 GetScale();
 	XMFLOAT4X4 GetTransform();
 	MeshData* GetMesh();
+	bool GetFalling();
 };
 

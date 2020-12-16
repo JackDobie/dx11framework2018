@@ -423,6 +423,19 @@ void Application::Update()
     for each (GameObject* obj in objects)
     {
         obj->Update();
+
+        if (obj->GetFalling())
+        {
+            if (obj->GetPosition().y > 0.0f)
+            {
+                obj->SetPosition(XMFLOAT3(obj->GetPosition().x, obj->GetPosition().y - (5.0f * deltaTime), obj->GetPosition().z));
+            }
+            else
+            {
+                obj->SetPosition(XMFLOAT3(obj->GetPosition().x, 0.0f, obj->GetPosition().z));
+                obj->SetFalling(false);
+            }
+        }
     }
     cam->Update();
 }
@@ -443,7 +456,10 @@ void Application::Inputs()
     }
     if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 != 0)//if right mouse is pressed down
     {
-        //DropObject(selectedObject);
+        if (selectedObject != nullptr)
+        {
+            selectedObject->SetFalling(true);
+        }
         selectedObject = nullptr;
     }
 
@@ -673,15 +689,11 @@ void Application::MousePick()
 
     for each (GameObject* obj in objects)
     {
-        if (obj->CheckCollision(rayOrigin, rayDir))
+        if (obj->CheckCollision(rayOrigin, rayDir)) //if ray intersects with any of the objects
         {
-            //hit
-            selectedObject = obj;
+            if(selectedObject != nullptr) selectedObject->SetFalling(true); // old selected object starts falling
+            selectedObject = obj; //set selected object to the intersected object
+            obj->SetFalling(false); //stop the intersected object from falling
         }
     }
-}
-
-void Application::DropObject(GameObject* object)
-{
-    //do physics stuff
 }

@@ -8,6 +8,7 @@ GameObject::GameObject(MeshData mesh, XMFLOAT3 position, XMFLOAT3 rotation, XMFL
 	_scale = scale;
 	boundingSphere.Center = _position;
 	boundingSphere.Radius = collisionRadius;
+	_falling = false;
 }
 
 void GameObject::SetOBJ(MeshData mesh)
@@ -30,6 +31,10 @@ void GameObject::SetScale(XMFLOAT3 scale)
 void GameObject::SetTransform(XMFLOAT4X4 transform)
 {
 	_transform = transform;
+}
+void GameObject::SetFalling(bool fall)
+{
+	_falling = fall;
 }
 
 void GameObject::MoveWithCam(float speed, XMVECTOR camTarget)
@@ -60,10 +65,8 @@ bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 {
 	float distance = 1.0f;
 
-	//rayDir = XMVector3Normalize(rayDir);
 	if (boundingSphere.Intersects(rayOrigin, rayDir, distance))
 	{
-		//SetPosition(XMFLOAT3(_position.x, _position.y, _position.z + 1));
 		return true;
 	}
 	return false;
@@ -72,7 +75,7 @@ bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 void GameObject::Update()
 {
 	XMStoreFloat4x4(&_transform, XMMatrixScaling(_scale.x, _scale.y, _scale.z) * XMMatrixRotationRollPitchYaw(_rotation.x, _rotation.y, _rotation.z) * XMMatrixTranslation(_position.x, _position.y, _position.z));
-	boundingSphere.Center = _position;
+	boundingSphere.Center = XMFLOAT3(_position.x + boundingSphere.Radius, _position.y - boundingSphere.Radius, _position.z + boundingSphere.Radius);
 }
 
 XMFLOAT3 GameObject::GetPosition()
@@ -94,4 +97,8 @@ XMFLOAT4X4 GameObject::GetTransform()
 MeshData* GameObject::GetMesh()
 {
 	return &_mesh;
+}
+bool GameObject::GetFalling()
+{
+	return _falling;
 }
