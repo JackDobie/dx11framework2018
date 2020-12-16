@@ -101,6 +101,10 @@ XMFLOAT3 Camera::GetUp()
 {
 	return _up;
 }
+XMFLOAT3 Camera::GetRight()
+{
+	return _right;
+}
 
 XMFLOAT4X4 Camera::GetView()
 {

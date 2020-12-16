@@ -75,6 +75,8 @@ private:
 	Camera*					cam;
 	vector<GameObject*>		objects;
 
+	GameObject*				selectedObject;
+
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 	HRESULT InitDevice();

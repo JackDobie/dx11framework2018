@@ -48,6 +48,7 @@ public:
 	// functions to return values
 	XMFLOAT3 GetPos();
 	XMFLOAT3 GetAt();
+	XMFLOAT3 GetRight();
 	XMFLOAT3 GetUp();
 	float GetAngle(XMFLOAT3 pos1, XMFLOAT3 pos2);
 

@@ -25,6 +25,9 @@ public:
 	void SetScale(XMFLOAT3 scale);
 	void SetTransform(XMFLOAT4X4 transform);
 
+	void MoveWithCam(float speed, XMVECTOR camTarget);
+	void StrafeWithCam(float speed, XMVECTOR camRight);
+
 	void SetCollisionRadius(float radius);
 	void SetCollisionBox();
 	bool CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDirection);

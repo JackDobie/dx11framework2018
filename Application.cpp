@@ -435,6 +435,10 @@ void Application::Inputs()
     {
         MousePick();
     }
+    if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 != 0)//if right mouse is pressed down
+    {
+        selectedObject = nullptr;
+    }
 
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
@@ -457,25 +461,66 @@ void Application::Inputs()
         cam->Strafe(0.001f);
     }
 
-    if (GetAsyncKeyState(VK_UP) & 0x8000)//if up arrow is pressed
+    if (GetAsyncKeyState(0x49) & 0x8000)//if I is pressed
     {
-        //point cam up
-        cam->AddAt(XMFLOAT3(0.0f, -0.025f, 0.0f));
+        if (selectedObject == nullptr)
+        {
+            //point cam up
+            cam->AddAt(XMFLOAT3(0.0f, -0.025f, 0.0f));
+        }
+        else
+        {
+            //move object to the away from the screen
+            selectedObject->MoveWithCam(0.001f, XMLoadFloat3(&cam->GetAt()));
+        }
     }
-    else if (GetAsyncKeyState(VK_DOWN) & 0x8000)//if down arrow is pressed
+    else if (GetAsyncKeyState(0x4B) & 0x8000)//if K is pressed
     {
-        //point cam down
-        cam->AddAt(XMFLOAT3(0.0f, 0.025f, 0.0f));
+        if (selectedObject == nullptr)
+        {
+            //point cam down
+            cam->AddAt(XMFLOAT3(0.0f, 0.025f, 0.0f));
+        }
+        else
+        {
+            //move object to the towards the screen
+            selectedObject->MoveWithCam(-0.001f, XMLoadFloat3(&cam->GetAt()));
+        }
     }
-    else if (GetAsyncKeyState(VK_LEFT) & 0x8000)//if left arrow is pressed
+    else if (GetAsyncKeyState(0x4A) & 0x8000)//if J is pressed
     {
-        //point cam up
-        cam->AddAt(XMFLOAT3(0.0f, 0.0f, -0.025f));
+        if (selectedObject == nullptr)
+        {
+            //point cam left
+            cam->AddAt(XMFLOAT3(0.0f, 0.0f, -0.025f));
+        }
+        else
+        {
+            //move object to the left of the screen
+            selectedObject->StrafeWithCam(-0.001f, XMLoadFloat3(&cam->GetRight()));
+        }
     }
-    else if (GetAsyncKeyState(VK_RIGHT) & 0x8000)//if right arrow is pressed
+    else if (GetAsyncKeyState(0x4C) & 0x8000)//if L is pressed
     {
-        //point cam down
-        cam->AddAt(XMFLOAT3(0.0f, 0.0f, 0.025f));
+        if (selectedObject == nullptr)
+        {
+            //point cam right
+            cam->AddAt(XMFLOAT3(0.0f, 0.0f, 0.025f));
+        }
+        else
+        {
+            //move object to the right of the screen
+            selectedObject->StrafeWithCam(0.001f, XMLoadFloat3(&cam->GetRight()));
+        }
+    }
+
+    if (GetAsyncKeyState(0x55) & 0x8000)//if U is pressed
+    {
+        //move object down
+    }
+    else if (GetAsyncKeyState(0x50) & 0x8000)//if P is pressed
+    {
+        //move object up
     }
 
     if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000 != 0)//if numpad1 is pressed down
@@ -508,12 +553,6 @@ void Application::Inputs()
     {
         XMFLOAT3 obj3Pos = objects[2]->GetPosition();
         objects[2]->SetPosition(XMFLOAT3(obj3Pos.x, obj3Pos.y, obj3Pos.z - 5.0f));
-    }
-
-    if (GetAsyncKeyState(0x52) & 0x8000 != 0)//if r is pressed down
-    {
-        //look at object 2
-        cam->LookAt(objects[1]->GetPosition());
     }
 }
 
@@ -635,6 +674,7 @@ void Application::MousePick()
         if (obj->CheckCollision(rayOrigin, rayDir))
         {
             //hit
+            selectedObject = obj;
         }
     }
 }

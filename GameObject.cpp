@@ -32,6 +32,25 @@ void GameObject::SetTransform(XMFLOAT4X4 transform)
 	_transform = transform;
 }
 
+void GameObject::MoveWithCam(float speed, XMVECTOR camTarget)
+{
+	XMVECTOR amount = XMVectorReplicate(speed);
+	XMVECTOR pos = XMLoadFloat3(&_position);
+	//multiply forward vector by speed, and add to position
+	XMFLOAT4 out;
+	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camTarget, pos));
+	_position = XMFLOAT3(out.x, _position.y, out.z);
+}
+void GameObject::StrafeWithCam(float speed, XMVECTOR camRight)
+{
+	XMVECTOR amount = XMVectorReplicate(speed);
+	XMVECTOR pos = XMLoadFloat3(&_position);
+	//multiply right facing vector by speed, and add to position
+	XMFLOAT4 out;
+	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camRight, pos));
+	_position = XMFLOAT3(out.x, _position.y, out.z);
+}
+
 void GameObject::SetCollisionRadius(float radius)
 {
 	boundingSphere.Radius = radius;
@@ -44,7 +63,7 @@ bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 	//rayDir = XMVector3Normalize(rayDir);
 	if (boundingSphere.Intersects(rayOrigin, rayDir, distance))
 	{
-		SetPosition(XMFLOAT3(_position.x, _position.y, _position.z + 1));
+		//SetPosition(XMFLOAT3(_position.x, _position.y, _position.z + 1));
 		return true;
 	}
 	return false;
