@@ -8,6 +8,8 @@ Camera::Camera(XMFLOAT3 position, XMFLOAT3 at, XMFLOAT3 up, float windowWidth, f
 	_right = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	Reshape(windowWidth, windowHeight, nearDepth, farDepth);
 
+	moveSpeed = 10.0f;
+
 	Update();
 }
 
@@ -41,9 +43,9 @@ void Camera::AddAt(XMFLOAT3 addAt)
 	rot = Rotate(dx, dy, dz, rot);
 	_right = XMFLOAT3(rot.x, rot.y, rot.z);
 }
-void Camera::Move(float speed)
+void Camera::Move(float deltaTime)
 {
-	XMVECTOR amount = XMVectorReplicate(speed);
+	XMVECTOR amount = XMVectorReplicate(moveSpeed * deltaTime);
 	XMVECTOR target = XMLoadFloat3(&_at);
 	XMVECTOR pos = XMLoadFloat3(&_eye);
 	//multiply forward vector by speed, and add to position
@@ -51,9 +53,9 @@ void Camera::Move(float speed)
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, target, pos));
 	_eye = XMFLOAT3(out.x, _eye.y, out.z);
 }
-void Camera::Strafe(float speed)
+void Camera::Strafe(float deltaTime)
 {
-	XMVECTOR amount = XMVectorReplicate(speed);
+	XMVECTOR amount = XMVectorReplicate(moveSpeed * deltaTime);
 	XMVECTOR right = XMLoadFloat3(&_right);
 	XMVECTOR pos = XMLoadFloat3(&_eye);
 	//multiply right facing vector by speed, and add to position
@@ -73,7 +75,6 @@ XMFLOAT3 Camera::Rotate(float dx, float dy, float dz, XMFLOAT3 original)
 	{
 		dy = -dy;
 	}
-
 
 	//create rotation matrix
 	XMMATRIX r = XMMatrixRotationRollPitchYaw(dy, dz, dx);
@@ -137,4 +138,14 @@ void Camera::Update()
 	XMVECTOR atVec = XMLoadFloat3(&_at);
 	XMVECTOR upVec = XMLoadFloat3(&_up);
 	XMStoreFloat4x4(&_view, XMMatrixLookToLH(eyeVec, atVec, upVec));
+}
+
+void Camera::SetMoveSpeed(float newSpeed)
+{
+	moveSpeed = newSpeed;
+}
+
+float Camera::GetMoveSpeed()
+{
+	return moveSpeed;
 }

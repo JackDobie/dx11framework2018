@@ -450,22 +450,35 @@ void Application::Inputs()
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
         //move cam forwards
-        cam->Move(5.0f * deltaTime);
+        cam->Move(deltaTime);
     }
     else if (GetAsyncKeyState(0x53) & 0x8000)//if S is pressed down
     {
         //move cam backwards
-        cam->Move(-5.0f * deltaTime);
+        cam->Move(-deltaTime);
     }
     if (GetAsyncKeyState(0x41) & 0x8000)//if A is pressed down
     {
         //move cam left
-        cam->Strafe(-10.0f * deltaTime);
+        cam->Strafe(-deltaTime);
     }
     else if (GetAsyncKeyState(0x44) & 0x8000)//if D is pressed down
     {
         //move cam right
-        cam->Strafe(10.0f * deltaTime);
+        cam->Strafe(deltaTime);
+    }
+
+    if (GetAsyncKeyState(0x51) & 0x8000)//if Q is pressed down
+    {
+        //decrease speed
+        if (cam->GetMoveSpeed() > 2.0f)
+            cam->SetMoveSpeed(cam->GetMoveSpeed() - 0.001f);
+    }
+    if (GetAsyncKeyState(0x45) & 0x8000)//if E is pressed down
+    {
+        //increase speed
+        if (cam->GetMoveSpeed() < 20.0f)
+            cam->SetMoveSpeed(cam->GetMoveSpeed() + 0.001f);
     }
 
     if (GetAsyncKeyState(0x49) & 0x8000)//if I is pressed

@@ -23,6 +23,8 @@ private:
 	XMFLOAT4X4 _view;
 	XMFLOAT4X4 _projection;
 
+	float moveSpeed;
+
 public:
 	Camera(XMFLOAT3 position, XMFLOAT3 at, XMFLOAT3 up, float windowWidth, float windowHeight, float nearDepth, float farDepth);
 
@@ -32,14 +34,15 @@ public:
 	void SetPos(XMFLOAT3 newEye);
 	void SetAt(XMFLOAT3 newAt);
 	void SetUp(XMFLOAT3 newUp);
+	void SetMoveSpeed(float newSpeed);
 
 	void AddAt(XMFLOAT3 addAt);
 
 	void LookAt(XMFLOAT3 pos);
 	XMFLOAT3 Rotate(float dx, float dy, float dz, XMFLOAT3 original);
 
-	void Move(float speed);
-	void Strafe(float speed);
+	void Move(float deltaTime);
+	void Strafe(float deltaTime);
 
 	// functions to return values
 	XMFLOAT3 GetPos();
@@ -47,6 +50,7 @@ public:
 	XMFLOAT3 GetRight();
 	XMFLOAT3 GetUp();
 	float GetAngle(XMFLOAT3 pos1, XMFLOAT3 pos2);
+	float GetMoveSpeed();
 
 	XMFLOAT4X4 GetView();
 	XMFLOAT4X4 GetProjection();
