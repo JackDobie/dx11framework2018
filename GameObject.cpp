@@ -6,6 +6,7 @@ GameObject::GameObject(MeshData mesh, XMFLOAT3 position, XMFLOAT3 rotation, XMFL
 	_position = position;
 	_rotation = rotation;
 	_scale = scale;
+	boundingSphere.Center = _position;
 	boundingSphere.Radius = collisionRadius;
 }
 
@@ -36,11 +37,14 @@ void GameObject::SetCollisionRadius(float radius)
 	boundingSphere.Radius = radius;
 }
 
-bool GameObject::CheckCollision(XMFLOAT3 rayOrigin, XMFLOAT3 rayDir)
+bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 {
-	float distance = 0.0f;
-	if (boundingSphere.Intersects(XMLoadFloat3(&rayOrigin), XMLoadFloat3(&rayDir), distance))
+	float distance = 1.0f;
+
+	//rayDir = XMVector3Normalize(rayDir);
+	if (boundingSphere.Intersects(rayOrigin, rayDir, distance))
 	{
+		SetPosition(XMFLOAT3(_position.x, _position.y, _position.z + 1));
 		return true;
 	}
 	return false;

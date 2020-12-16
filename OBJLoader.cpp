@@ -67,6 +67,7 @@ void OBJLoader::CreateIndices(const std::vector<XMFLOAT3>& inVertices,
 //and normals. If you still have no "vt" lines, you'll need to do some texture unwrapping, also known as UV unwrapping.
 MeshData OBJLoader::Load(char* filename, ID3D11Device* _pd3dDevice, bool invertTexCoords)
 {
+	int furthestPoint = 0;
 	std::string binaryFilename = filename;
 	binaryFilename.append("Binary");
 	std::ifstream binaryInFile;
@@ -239,6 +240,19 @@ MeshData OBJLoader::Load(char* filename, ID3D11Device* _pd3dDevice, bool invertT
 			outbin.write((char*)indicesArray, sizeof(unsigned short) * numMeshIndices);
 			outbin.close();
 
+			//find furthest vert
+			for (int i = 0; i < numMeshVertices; i++)
+			{
+				if (finalVerts[i].Pos.x > furthestPoint)
+					furthestPoint = finalVerts[i].Pos.x;
+
+				if (finalVerts[i].Pos.y > furthestPoint)
+					furthestPoint = finalVerts[i].Pos.y;
+
+				if (finalVerts[i].Pos.z > furthestPoint)
+					furthestPoint = finalVerts[i].Pos.z;
+			}
+
 			ID3D11Buffer* indexBuffer;
 
 			ZeroMemory(&bd, sizeof(bd));
@@ -258,6 +272,8 @@ MeshData OBJLoader::Load(char* filename, ID3D11Device* _pd3dDevice, bool invertT
 			delete [] indicesArray;
 			delete [] finalVerts;
 
+			meshData.FurthestPoint = furthestPoint;
+
 			return meshData;
 		}
 	}
@@ -276,6 +292,19 @@ MeshData OBJLoader::Load(char* filename, ID3D11Device* _pd3dDevice, bool invertT
 		unsigned short* indices = new unsigned short[numIndices];
 		binaryInFile.read((char*)finalVerts, sizeof(SimpleVertex) * numVertices);
 		binaryInFile.read((char*)indices, sizeof(unsigned short) * numIndices);
+
+		//find furthest vert
+		for (int i = 0; i < numVertices; i++)
+		{
+			if (finalVerts[i].Pos.x > furthestPoint)
+				furthestPoint = finalVerts[i].Pos.x;
+
+			if (finalVerts[i].Pos.y > furthestPoint)
+				furthestPoint = finalVerts[i].Pos.y;
+
+			if (finalVerts[i].Pos.z > furthestPoint)
+				furthestPoint = finalVerts[i].Pos.z;
+		}
 
 		//Put data into vertex and index buffers, then pass the relevant data to the MeshData object.
 		//The rest of the code will hopefully look familiar to you, as it's similar to whats in your InitVertexBuffer and InitIndexBuffer methods
@@ -316,6 +345,8 @@ MeshData OBJLoader::Load(char* filename, ID3D11Device* _pd3dDevice, bool invertT
 		//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 		delete [] indices;
 		delete [] finalVerts;
+
+		meshData.FurthestPoint = furthestPoint;
 
 		return meshData;
 	}

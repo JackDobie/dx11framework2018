@@ -65,9 +65,11 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
-    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT3(-2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f));
-    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f));
-    objects.push_back(new GameObject(LoadMesh("Models/star.obj"), XMFLOAT3(2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 1.0f));
+    MeshData StarMesh = LoadMesh("Models/star.obj");
+
+    objects.push_back(new GameObject(StarMesh, XMFLOAT3(-2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), StarMesh.FurthestPoint));
+    objects.push_back(new GameObject(StarMesh, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), StarMesh.FurthestPoint));
+    objects.push_back(new GameObject(StarMesh, XMFLOAT3(2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), StarMesh.FurthestPoint));
     objects.push_back(new GameObject(LoadMesh("Models/RoomNoRoof.obj"), XMFLOAT3(0.0f, 4.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), 0.0f));
 
     // Initialize the view matrix
@@ -630,15 +632,9 @@ void Application::MousePick()
 
     for each (GameObject* obj in objects)
     {
-        if (obj->CheckCollision(cam->GetPos(), cam->GetAt()))
+        if (obj->CheckCollision(rayOrigin, rayDir))
         {
             //hit
-            XMFLOAT3 obj1Pos = objects[0]->GetPosition();
-            obj->SetPosition(XMFLOAT3(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f));
-        }
-        else
-        {
-
         }
     }
 }

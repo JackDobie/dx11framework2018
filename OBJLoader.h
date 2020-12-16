@@ -16,6 +16,7 @@ struct MeshData
 	UINT VBStride;
 	UINT VBOffset;
 	UINT IndexCount;
+	int FurthestPoint;
 };
 
 namespace OBJLoader

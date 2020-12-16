@@ -27,7 +27,7 @@ public:
 
 	void SetCollisionRadius(float radius);
 	void SetCollisionBox();
-	bool CheckCollision(XMFLOAT3 rayOrigin, XMFLOAT3 rayDirection);
+	bool CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDirection);
 
 	void Update();
 
