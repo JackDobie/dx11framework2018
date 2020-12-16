@@ -516,11 +516,21 @@ void Application::Inputs()
 
     if (GetAsyncKeyState(0x55) & 0x8000)//if U is pressed
     {
-        //move object down
+        if (selectedObject != nullptr)
+        {
+            //move object down
+            XMFLOAT3 objPos = selectedObject->GetPosition();
+            selectedObject->SetPosition(XMFLOAT3(objPos.x, objPos.y - 0.001f, objPos.z));
+        }
     }
-    else if (GetAsyncKeyState(0x50) & 0x8000)//if P is pressed
+    else if (GetAsyncKeyState(0x4F) & 0x8000)//if O is pressed
     {
-        //move object up
+        if (selectedObject != nullptr)
+        {
+            //move object up
+            XMFLOAT3 objPos = selectedObject->GetPosition();
+            selectedObject->SetPosition(XMFLOAT3(objPos.x, objPos.y + 0.001f, objPos.z));
+        }
     }
 
     if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000 != 0)//if numpad1 is pressed down
