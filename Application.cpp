@@ -65,6 +65,9 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
         return E_FAIL;
     }
 
+    deltaTime = 0.0f;
+    oldTime = 0.0f;
+
     MeshData StarMesh = LoadMesh("Models/star.obj");
 
     objects.push_back(new GameObject(StarMesh, XMFLOAT3(-2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), StarMesh.FurthestPoint));
@@ -404,13 +407,16 @@ void Application::Update()
     else
     {
         static DWORD dwTimeStart = 0;
-        DWORD dwTimeCur = GetTickCount();
+        DWORD dwTimeCur = GetTickCount64();
 
         if (dwTimeStart == 0)
             dwTimeStart = dwTimeCur;
 
         t = (dwTimeCur - dwTimeStart) / 1000.0f;
     }
+
+    deltaTime = t - oldTime;
+    oldTime = t;
 
     Inputs();
 
@@ -437,80 +443,61 @@ void Application::Inputs()
     }
     if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 != 0)//if right mouse is pressed down
     {
+        //DropObject(selectedObject);
         selectedObject = nullptr;
     }
 
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
         //move cam forwards
-        cam->Move(0.0005f);
+        cam->Move(5.0f * deltaTime);
     }
     else if (GetAsyncKeyState(0x53) & 0x8000)//if S is pressed down
     {
         //move cam backwards
-        cam->Move(-0.0005f);
+        cam->Move(-5.0f * deltaTime);
     }
     if (GetAsyncKeyState(0x41) & 0x8000)//if A is pressed down
     {
         //move cam left
-        cam->Strafe(-0.001f);
+        cam->Strafe(-10.0f * deltaTime);
     }
     else if (GetAsyncKeyState(0x44) & 0x8000)//if D is pressed down
     {
         //move cam right
-        cam->Strafe(0.001f);
+        cam->Strafe(10.0f * deltaTime);
     }
 
     if (GetAsyncKeyState(0x49) & 0x8000)//if I is pressed
     {
-        if (selectedObject == nullptr)
-        {
-            //point cam up
-            cam->AddAt(XMFLOAT3(0.0f, -0.025f, 0.0f));
-        }
-        else
+        if (selectedObject != nullptr)
         {
             //move object to the away from the screen
-            selectedObject->MoveWithCam(0.001f, XMLoadFloat3(&cam->GetAt()));
+            selectedObject->MoveWithCam(10.0f * deltaTime, XMLoadFloat3(&cam->GetAt()));
         }
     }
     else if (GetAsyncKeyState(0x4B) & 0x8000)//if K is pressed
     {
-        if (selectedObject == nullptr)
-        {
-            //point cam down
-            cam->AddAt(XMFLOAT3(0.0f, 0.025f, 0.0f));
-        }
-        else
+        if (selectedObject != nullptr)
         {
             //move object to the towards the screen
-            selectedObject->MoveWithCam(-0.001f, XMLoadFloat3(&cam->GetAt()));
+            selectedObject->MoveWithCam(-10.0f * deltaTime, XMLoadFloat3(&cam->GetAt()));
         }
     }
     else if (GetAsyncKeyState(0x4A) & 0x8000)//if J is pressed
     {
-        if (selectedObject == nullptr)
-        {
-            //point cam left
-            cam->AddAt(XMFLOAT3(0.0f, 0.0f, -0.025f));
-        }
-        else
+        if (selectedObject != nullptr)
         {
             //move object to the left of the screen
-            selectedObject->StrafeWithCam(-0.001f, XMLoadFloat3(&cam->GetRight()));
+            selectedObject->StrafeWithCam(-10.0f * deltaTime, XMLoadFloat3(&cam->GetRight()));
         }
     }
     else if (GetAsyncKeyState(0x4C) & 0x8000)//if L is pressed
     {
-        if (selectedObject == nullptr)
-        {
-            //point cam right
-            cam->AddAt(XMFLOAT3(0.0f, 0.0f, 0.025f));
-        }
-        else
+        if (selectedObject != nullptr)
         {
             //move object to the right of the screen
-            selectedObject->StrafeWithCam(0.001f, XMLoadFloat3(&cam->GetRight()));
+            selectedObject->StrafeWithCam(10.0f * deltaTime, XMLoadFloat3(&cam->GetRight()));
         }
     }
 
@@ -520,7 +507,7 @@ void Application::Inputs()
         {
             //move object down
             XMFLOAT3 objPos = selectedObject->GetPosition();
-            selectedObject->SetPosition(XMFLOAT3(objPos.x, objPos.y - 0.001f, objPos.z));
+            selectedObject->SetPosition(XMFLOAT3(objPos.x, objPos.y - (10.0f * deltaTime), objPos.z));
         }
     }
     else if (GetAsyncKeyState(0x4F) & 0x8000)//if O is pressed
@@ -529,40 +516,32 @@ void Application::Inputs()
         {
             //move object up
             XMFLOAT3 objPos = selectedObject->GetPosition();
-            selectedObject->SetPosition(XMFLOAT3(objPos.x, objPos.y + 0.001f, objPos.z));
+            selectedObject->SetPosition(XMFLOAT3(objPos.x, objPos.y + (10.0f * deltaTime), objPos.z));
         }
     }
 
-    if (GetAsyncKeyState(VK_NUMPAD1) & 0x8000 != 0)//if numpad1 is pressed down
+    if (GetAsyncKeyState(VK_UP) & 0x8000) //if up arrow is pressed
     {
-        XMFLOAT3 obj1Pos = objects[0]->GetPosition();
-        objects[0]->SetPosition(XMFLOAT3(obj1Pos.x, obj1Pos.y, obj1Pos.z + 5.0f));
-    }
-    else if (GetAsyncKeyState(VK_NUMPAD4) & 0x8000 != 0)//if numpad4 is pressed down
-    {
-        XMFLOAT3 obj1Pos = objects[0]->GetPosition();
-        objects[0]->SetPosition(XMFLOAT3(obj1Pos.x, obj1Pos.y, obj1Pos.z - 5.0f));
-    }
-    if (GetAsyncKeyState(VK_NUMPAD2) & 0x8000 != 0)//if numpad2 is pressed down
-    {
-        XMFLOAT3 obj2Pos = objects[1]->GetPosition();
-        objects[1]->SetPosition(XMFLOAT3(obj2Pos.x, obj2Pos.y, obj2Pos.z + 5.0f));
-    }
-    else if (GetAsyncKeyState(VK_NUMPAD5) & 0x8000 != 0)//if numpad5 is pressed down
-    {
-        XMFLOAT3 obj2Pos = objects[1]->GetPosition();
-        objects[1]->SetPosition(XMFLOAT3(obj2Pos.x, obj2Pos.y, obj2Pos.z - 5.0f));
+        //point cam up
+        cam->AddAt(XMFLOAT3(0.0f, -250.0f * deltaTime, 0.0f));
     }
 
-    if (GetAsyncKeyState(VK_NUMPAD3) & 0x8000 != 0)//if numpad3 is pressed down
+    else if (GetAsyncKeyState(VK_DOWN) & 0x8000) //if down arrow is pressed
     {
-        XMFLOAT3 obj3Pos = objects[2]->GetPosition();
-        objects[2]->SetPosition(XMFLOAT3(obj3Pos.x, obj3Pos.y, obj3Pos.z + 5.0f));
+        //point cam down
+        cam->AddAt(XMFLOAT3(0.0f, 250.0f * deltaTime, 0.0f));
     }
-    else if (GetAsyncKeyState(VK_NUMPAD6) & 0x8000 != 0)//if numpad6 is pressed down
+
+    else if (GetAsyncKeyState(VK_LEFT) & 0x8000) //if left arrow is pressed
     {
-        XMFLOAT3 obj3Pos = objects[2]->GetPosition();
-        objects[2]->SetPosition(XMFLOAT3(obj3Pos.x, obj3Pos.y, obj3Pos.z - 5.0f));
+        //point cam left
+        cam->AddAt(XMFLOAT3(0.0f, 0.0f, -250.0f * deltaTime));
+    }
+
+    else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) //if right arrow is pressed
+    {
+        //point cam right
+        cam->AddAt(XMFLOAT3(0.0f, 0.0f, 250.0f * deltaTime));
     }
 }
 
@@ -687,4 +666,9 @@ void Application::MousePick()
             selectedObject = obj;
         }
     }
+}
+
+void Application::DropObject(GameObject* object)
+{
+    //do physics stuff
 }

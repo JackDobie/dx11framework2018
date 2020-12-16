@@ -1,10 +1,6 @@
 #pragma once
 
 #include <directxmath.h>
-#include <tgmath.h>
-#define _USE_MATH_DEFINES
-#include <math.h>
-#include <cmath>
 
 using namespace DirectX;
 

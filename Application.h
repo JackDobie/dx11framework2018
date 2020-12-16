@@ -75,7 +75,10 @@ private:
 	Camera*					cam;
 	vector<GameObject*>		objects;
 
-	GameObject*				selectedObject;
+	GameObject*				selectedObject = nullptr;
+
+	float					deltaTime;
+	float					oldTime;
 
 private:
 	HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
@@ -105,5 +108,6 @@ public:
 	void Draw();
 	void Inputs();
 	void MousePick();
+	void DropObject(GameObject* object);
 };
 

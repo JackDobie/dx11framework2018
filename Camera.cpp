@@ -73,7 +73,6 @@ XMFLOAT3 Camera::Rotate(float dx, float dy, float dz, XMFLOAT3 original)
 	{
 		dy = -dy;
 	}
-	//FXMVECTOR angle = XMVector3AngleBetweenVectors(XMLoadFloat3(&original), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f));
 
 
 	//create rotation matrix
@@ -117,7 +116,7 @@ XMFLOAT4X4 Camera::GetProjection()
 
 float Camera::GetAngle(XMFLOAT3 pos1, XMFLOAT3 pos2)
 {
-	float n = 270 - atan2(pos2.z - pos1.z, pos2.x - pos1.x) * 180 / M_PI;
+	float n = 270 - atan2(pos2.z - pos1.z, pos2.x - pos1.x) * 180 / XM_PI;
 	float angle = fmod(n, 360);
 
 	return angle;
