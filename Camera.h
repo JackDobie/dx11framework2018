@@ -57,4 +57,5 @@ public:
 
 	// function to reshape the camera volume if the window is resized
 	void Reshape(float windowWidth, float windowHeight, float nearDepth, float farDepth);
+	void Reshape(float windowWidth, float windowHeight);
 };

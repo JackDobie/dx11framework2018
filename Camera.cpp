@@ -132,6 +132,13 @@ void Camera::Reshape(float windowWidth, float windowHeight, float nearDepth, flo
 	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, windowWidth / (float)windowHeight, 0.01f, 100.0f));
 }
 
+void Camera::Reshape(float windowWidth, float windowHeight)
+{
+	_windowWidth = windowWidth;
+	_windowHeight = windowHeight;
+	XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, windowWidth / (float)windowHeight, 0.01f, 100.0f));
+}
+
 void Camera::Update()
 {
 	XMVECTOR eyeVec = XMLoadFloat3(&_eye);

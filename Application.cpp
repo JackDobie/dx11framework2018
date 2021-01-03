@@ -1,5 +1,7 @@
 #include "Application.h"
 
+Application* application;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     PAINTSTRUCT ps;
@@ -15,6 +17,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_DESTROY:
             PostQuitMessage(0);
             break;
+
+        case WM_SIZE: // Handle window resizing
+        {
+            int width = LOWORD(lParam);  // Macro to get the low-order word.
+            int height = HIWORD(lParam); // Macro to get the high-order word.
+
+            // Respond to the message:
+            if (application != nullptr)
+                application->ResizeWindow(height, width);
+            break;
+        }
 
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -80,6 +93,7 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     XMFLOAT3 At = XMFLOAT3(0.0f, 0.0f, 1.0f);
     XMFLOAT3 Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
     cam = new Camera(Eye, At, Up, _WindowWidth, _WindowHeight, 0.0f, 100.0f);
+    application = this;
 
 	return S_OK;
 }
@@ -696,4 +710,11 @@ void Application::MousePick()
             obj->SetFalling(false); //stop the intersected object from falling
         }
     }
+}
+
+void Application::ResizeWindow(int height, int width)
+{
+    _WindowHeight = height;
+    _WindowWidth = width;
+    cam->Reshape(_WindowWidth, _WindowHeight);
 }

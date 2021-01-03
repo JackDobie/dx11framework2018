@@ -108,5 +108,6 @@ public:
 	void Draw();
 	void Inputs();
 	void MousePick();
+	void ResizeWindow(int height, int width);
 };
 

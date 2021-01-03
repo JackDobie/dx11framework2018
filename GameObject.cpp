@@ -63,7 +63,7 @@ void GameObject::SetCollisionRadius(float radius)
 
 bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 {
-	float distance = 1.0f;
+	float distance = 100.0f;
 
 	if (boundingSphere.Intersects(rayOrigin, rayDir, distance))
 	{
@@ -75,7 +75,7 @@ bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 void GameObject::Update()
 {
 	XMStoreFloat4x4(&_transform, XMMatrixScaling(_scale.x, _scale.y, _scale.z) * XMMatrixRotationRollPitchYaw(_rotation.x, _rotation.y, _rotation.z) * XMMatrixTranslation(_position.x, _position.y, _position.z));
-	boundingSphere.Center = XMFLOAT3(_position.x + boundingSphere.Radius, _position.y - boundingSphere.Radius, _position.z + boundingSphere.Radius);
+	boundingSphere.Center = XMFLOAT3(_position.x + (boundingSphere.Radius / 2), _position.y - (boundingSphere.Radius / 2), _position.z - (boundingSphere.Radius / 2));
 }
 
 XMFLOAT3 GameObject::GetPosition()
