@@ -29,6 +29,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             break;
         }
 
+        case WM_MOUSEMOVE: // Handle mouse movement
+        {
+            int xPos = GET_X_LPARAM(lParam);
+            int yPos = GET_Y_LPARAM(lParam);
+            if (application != nullptr)
+            {
+                application->_MousePos.x = xPos;
+                application->_MousePos.y = yPos;
+            }
+        }
+
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -663,17 +674,14 @@ void Application::LoadTexture(string path)
 
 void Application::MousePick()
 {
-    POINT mousePos;
-    GetCursorPos(&mousePos);
-
     XMMATRIX invView = XMMatrixInverse(nullptr, XMLoadFloat4x4(&cam->GetView()));
     XMMATRIX invProj = XMMatrixInverse(nullptr, XMLoadFloat4x4(&cam->GetProjection()));
 
     //convert pixel selected to a normalised screen coordinate
 
     float fNormalisedScreenCoordinates[2];
-    fNormalisedScreenCoordinates[0] = (2.0f * mousePos.x) / _WindowWidth - 1.0f;
-    fNormalisedScreenCoordinates[1] = 1.0f - (2.0f * mousePos.y) / _WindowHeight;
+    fNormalisedScreenCoordinates[0] = (2.0f * _MousePos.x) / _WindowWidth - 1.0f;
+    fNormalisedScreenCoordinates[1] = 1.0f - (2.0f * _MousePos.y) / _WindowHeight;
 
     //extract the camera position from the view matrix
 

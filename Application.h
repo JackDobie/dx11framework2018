@@ -1,6 +1,7 @@
 #pragma once
 
 #include <windows.h>
+#include <windowsx.h>
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
@@ -109,5 +110,7 @@ public:
 	void Inputs();
 	void MousePick();
 	void ResizeWindow(int height, int width);
+
+	XMFLOAT2 _MousePos = XMFLOAT2(0, 0);
 };
 
