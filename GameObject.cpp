@@ -44,6 +44,10 @@ void GameObject::MoveWithCam(float speed, XMVECTOR camTarget)
 	//multiply forward vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camTarget, pos));
+	if (out.x > 9.5f || out.x < -9.5f)
+		out.x = _position.x;
+	if (out.z > 9.5f || out.z < -9.5f)
+		out.z = _position.z;
 	_position = XMFLOAT3(out.x, _position.y, out.z);
 }
 void GameObject::StrafeWithCam(float speed, XMVECTOR camRight)
@@ -53,6 +57,10 @@ void GameObject::StrafeWithCam(float speed, XMVECTOR camRight)
 	//multiply right facing vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camRight, pos));
+	if (out.x > 9.5f || out.x < -9.5f)
+		out.x = _position.x;
+	if (out.z > 9.5f || out.z < -9.5f)
+		out.z = _position.z;
 	_position = XMFLOAT3(out.x, _position.y, out.z);
 }
 

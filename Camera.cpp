@@ -51,6 +51,10 @@ void Camera::Move(float deltaTime)
 	//multiply forward vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, target, pos));
+	if (out.x > 9.5f || out.x < -9.5f)
+		out.x = _eye.x;
+	if (out.z > 9.5f || out.z < -9.5f)
+		out.z = _eye.z;
 	_eye = XMFLOAT3(out.x, _eye.y, out.z);
 }
 void Camera::Strafe(float deltaTime)
@@ -61,6 +65,10 @@ void Camera::Strafe(float deltaTime)
 	//multiply right facing vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, right, pos));
+	if (out.x > 9.5f || out.x < -9.5f)
+		out.x = _eye.x;
+	if (out.z > 9.5f || out.z < -9.5f)
+		out.z = _eye.z;
 	_eye = XMFLOAT3(out.x, _eye.y, out.z);
 }
 

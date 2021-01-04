@@ -488,6 +488,9 @@ void Application::Inputs()
         selectedObject = nullptr;
     }
 
+    // ===============
+    // Player movement
+    // ===============
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
         //move cam forwards
@@ -522,6 +525,36 @@ void Application::Inputs()
             cam->SetMoveSpeed(cam->GetMoveSpeed() + 0.001f);
     }
 
+    // ===============
+    // Camera movement
+    // ===============
+    if (GetAsyncKeyState(VK_UP) & 0x8000) //if up arrow is pressed
+    {
+        //point cam up
+        cam->AddAt(XMFLOAT3(0.0f, -250.0f * deltaTime, 0.0f));
+    }
+
+    else if (GetAsyncKeyState(VK_DOWN) & 0x8000) //if down arrow is pressed
+    {
+        //point cam down
+        cam->AddAt(XMFLOAT3(0.0f, 250.0f * deltaTime, 0.0f));
+    }
+
+    else if (GetAsyncKeyState(VK_LEFT) & 0x8000) //if left arrow is pressed
+    {
+        //point cam left
+        cam->AddAt(XMFLOAT3(0.0f, 0.0f, -250.0f * deltaTime));
+    }
+
+    else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) //if right arrow is pressed
+    {
+        //point cam right
+        cam->AddAt(XMFLOAT3(0.0f, 0.0f, 250.0f * deltaTime));
+    }
+
+    // ===============
+    // Object movement
+    // ===============
     if (GetAsyncKeyState(0x49) & 0x8000)//if I is pressed
     {
         if (selectedObject != nullptr)
@@ -572,30 +605,6 @@ void Application::Inputs()
             XMFLOAT3 objPos = selectedObject->GetPosition();
             selectedObject->SetPosition(XMFLOAT3(objPos.x, objPos.y + (10.0f * deltaTime), objPos.z));
         }
-    }
-
-    if (GetAsyncKeyState(VK_UP) & 0x8000) //if up arrow is pressed
-    {
-        //point cam up
-        cam->AddAt(XMFLOAT3(0.0f, -250.0f * deltaTime, 0.0f));
-    }
-
-    else if (GetAsyncKeyState(VK_DOWN) & 0x8000) //if down arrow is pressed
-    {
-        //point cam down
-        cam->AddAt(XMFLOAT3(0.0f, 250.0f * deltaTime, 0.0f));
-    }
-
-    else if (GetAsyncKeyState(VK_LEFT) & 0x8000) //if left arrow is pressed
-    {
-        //point cam left
-        cam->AddAt(XMFLOAT3(0.0f, 0.0f, -250.0f * deltaTime));
-    }
-
-    else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) //if right arrow is pressed
-    {
-        //point cam right
-        cam->AddAt(XMFLOAT3(0.0f, 0.0f, 250.0f * deltaTime));
     }
 }
 
