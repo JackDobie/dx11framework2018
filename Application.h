@@ -50,15 +50,6 @@ private:
 	ID3D11VertexShader*     _pVertexShader;
 	ID3D11PixelShader*      _pPixelShader;
 	ID3D11InputLayout*      _pVertexLayout;
-	ID3D11Buffer*			_pVertexBuffer;
-	ID3D11Buffer*			_pVertexBuffer2;
-	ID3D11Buffer*			_pVertexBuffer3;
-	ID3D11Buffer*           _pIndexBuffer;
-	ID3D11Buffer*			_pIndexBuffer2;
-	ID3D11Buffer*			_pIndexBuffer3;
-	ID3D11Buffer*			_pIndexBuffer4;
-	ID3D11Buffer*			_pIndexBuffer5;
-	ID3D11Buffer*			_pIndexBuffer6;
 	ID3D11Buffer*           _pConstantBuffer;
 	ID3D11DepthStencilView* _depthStencilView;
 	ID3D11Texture2D*		_depthStencilBuffer;
