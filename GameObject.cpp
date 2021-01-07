@@ -6,9 +6,9 @@ GameObject::GameObject(MeshData mesh, XMFLOAT3 position, XMFLOAT3 rotation, XMFL
 	_position = position;
 	_rotation = rotation;
 	_scale = scale;
-	boundingSphere.Center = _position;
 	boundingSphere.Radius = collisionRadius;
 	_falling = false;
+	Update();
 }
 
 void GameObject::SetOBJ(MeshData mesh)
@@ -37,6 +37,7 @@ void GameObject::SetFalling(bool fall)
 	_falling = fall;
 }
 
+//objects move relative to the camera, so they only need to use the camera's forward and right vector
 void GameObject::MoveWithCam(float speed, XMVECTOR camTarget)
 {
 	XMVECTOR amount = XMVectorReplicate(speed);
@@ -44,10 +45,12 @@ void GameObject::MoveWithCam(float speed, XMVECTOR camTarget)
 	//multiply forward vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camTarget, pos));
+	//restrict movement beyond 9.5 x and z
 	if (out.x > 9.5f || out.x < -9.5f)
 		out.x = _position.x;
 	if (out.z > 9.5f || out.z < -9.5f)
 		out.z = _position.z;
+	//update position with new x and z
 	_position = XMFLOAT3(out.x, _position.y, out.z);
 }
 void GameObject::StrafeWithCam(float speed, XMVECTOR camRight)
@@ -57,10 +60,12 @@ void GameObject::StrafeWithCam(float speed, XMVECTOR camRight)
 	//multiply right facing vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camRight, pos));
+	//restrict movement beyond 9.5 x and z
 	if (out.x > 9.5f || out.x < -9.5f)
 		out.x = _position.x;
 	if (out.z > 9.5f || out.z < -9.5f)
 		out.z = _position.z;
+	//update position with new x and z
 	_position = XMFLOAT3(out.x, _position.y, out.z);
 }
 
@@ -71,7 +76,7 @@ void GameObject::SetCollisionRadius(float radius)
 
 bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 {
-	float distance = 100.0f;
+	float distance = 0.0f;
 
 	if (boundingSphere.Intersects(rayOrigin, rayDir, distance))
 	{
@@ -82,7 +87,9 @@ bool GameObject::CheckCollision(XMVECTOR rayOrigin, XMVECTOR rayDir)
 
 void GameObject::Update()
 {
+	//update the object transform with scale rotation and position
 	XMStoreFloat4x4(&_transform, XMMatrixScaling(_scale.x, _scale.y, _scale.z) * XMMatrixRotationRollPitchYaw(_rotation.x, _rotation.y, _rotation.z) * XMMatrixTranslation(_position.x, _position.y, _position.z));
+	//update the boundingsphere centre per object. add half the radius to get the centre of the object.
 	boundingSphere.Center = XMFLOAT3(_position.x + (boundingSphere.Radius / 2), _position.y - (boundingSphere.Radius / 2), _position.z - (boundingSphere.Radius / 2));
 }
 

@@ -20,24 +20,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         case WM_SIZE: // Handle window resizing
         {
-            int width = LOWORD(lParam);  // Macro to get the low-order word.
-            int height = HIWORD(lParam); // Macro to get the high-order word.
+            int width = LOWORD(lParam);
+            int height = HIWORD(lParam);
 
-            // Respond to the message:
             if (application != nullptr)
                 application->ResizeWindow(height, width);
+
             break;
         }
 
         case WM_MOUSEMOVE: // Handle mouse movement
         {
+            // get x and y of mouse in window
             int xPos = GET_X_LPARAM(lParam);
             int yPos = GET_Y_LPARAM(lParam);
+
             if (application != nullptr)
-            {
-                application->_MousePos.x = xPos;
-                application->_MousePos.y = yPos;
-            }
+                application->_MousePos = XMFLOAT2(xPos, yPos);
+
+            break;
         }
 
         default:
@@ -516,13 +517,13 @@ void Application::Inputs()
     {
         //decrease speed
         if (cam->GetMoveSpeed() > 2.0f)
-            cam->SetMoveSpeed(cam->GetMoveSpeed() - 0.001f);
+            cam->SetMoveSpeed(cam->GetMoveSpeed() - (2.0f * deltaTime));
     }
     if (GetAsyncKeyState(0x45) & 0x8000)//if E is pressed down
     {
         //increase speed
         if (cam->GetMoveSpeed() < 20.0f)
-            cam->SetMoveSpeed(cam->GetMoveSpeed() + 0.001f);
+            cam->SetMoveSpeed(cam->GetMoveSpeed() + (2.0f * deltaTime));
     }
 
     // ===============
@@ -624,14 +625,14 @@ void Application::Draw()
     // Update variables
     lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);
     diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f);
-    diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-    ambientMaterial = XMFLOAT4(0.2f, 0.2f, 0.2f, 0.2f);
-    ambientLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+    diffuseLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
+    ambientMaterial = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
+    ambientLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
     specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-    specularPower = 5.0f;
-    //EyePosW = cam->GetPos();
-    EyePosW = XMFLOAT4(0.0f, 4.0f, -1.0f, 0.0f);
+    specularPower = 10.0f;
+    EyePosW = XMFLOAT4(cam->GetPos().x > 0 ? cam->GetPos().x : -cam->GetPos().x, cam->GetPos().y, cam->GetPos().z > 0 ? cam->GetPos().z : -cam->GetPos().z, 0.0f);
+    //EyePosW = XMFLOAT4(4.0f, 4.0f, 4.0f, 0.0f);
 
     ConstantBuffer cb;
 	cb.mView = XMMatrixTranspose(view);

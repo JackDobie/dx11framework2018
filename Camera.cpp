@@ -38,7 +38,7 @@ void Camera::AddAt(XMFLOAT3 addAt)
 	XMFLOAT3 rot = XMFLOAT3(_at.x, _at.y, _at.z);
 	rot = Rotate(dx, dy, dz, rot);
 	_at = XMFLOAT3(rot.x, rot.y, rot.z);
-
+	//rotate right with the same rotation for strafing
 	rot = XMFLOAT3(_right.x, _right.y, _right.z);
 	rot = Rotate(dx, dy, dz, rot);
 	_right = XMFLOAT3(rot.x, rot.y, rot.z);
@@ -51,10 +51,12 @@ void Camera::Move(float deltaTime)
 	//multiply forward vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, target, pos));
+	//restrict movement beyond 9.5 x and z
 	if (out.x > 9.5f || out.x < -9.5f)
 		out.x = _eye.x;
 	if (out.z > 9.5f || out.z < -9.5f)
 		out.z = _eye.z;
+	//update position with new x and z
 	_eye = XMFLOAT3(out.x, _eye.y, out.z);
 }
 void Camera::Strafe(float deltaTime)
@@ -65,10 +67,12 @@ void Camera::Strafe(float deltaTime)
 	//multiply right facing vector by speed, and add to position
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, right, pos));
+	//restrict movement beyond 9.5 x and z
 	if (out.x > 9.5f || out.x < -9.5f)
 		out.x = _eye.x;
 	if (out.z > 9.5f || out.z < -9.5f)
 		out.z = _eye.z;
+	//update position with new x and z
 	_eye = XMFLOAT3(out.x, _eye.y, out.z);
 }
 
@@ -78,6 +82,7 @@ XMFLOAT3 Camera::Rotate(float dx, float dy, float dz, XMFLOAT3 original)
 	dy = XMConvertToRadians(dy);
 	dz = XMConvertToRadians(dz);
 
+	//if facing away from 0,0,0, invert y movement. without this, y movement is inverted making you look up when pressing down.
 	float angle = GetAngle(XMFLOAT3(_at.x, _at.y, _at.z), XMFLOAT3(0.0f, 0.0f, 0.0f));
 	if (angle > 90.0f && angle < 270)
 	{
@@ -125,6 +130,7 @@ XMFLOAT4X4 Camera::GetProjection()
 
 float Camera::GetAngle(XMFLOAT3 pos1, XMFLOAT3 pos2)
 {
+	//get angle between pos1 and pos2 from 0 to 360
 	float n = 270 - atan2(pos2.z - pos1.z, pos2.x - pos1.x) * 180 / XM_PI;
 	float angle = fmod(n, 360);
 
@@ -149,6 +155,7 @@ void Camera::Reshape(float windowWidth, float windowHeight)
 
 void Camera::Update()
 {
+	//convert eye, at, and up to xmvector from xmfloat3
 	XMVECTOR eyeVec = XMLoadFloat3(&_eye);
 	XMVECTOR atVec = XMLoadFloat3(&_at);
 	XMVECTOR upVec = XMLoadFloat3(&_up);
