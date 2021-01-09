@@ -91,8 +91,10 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
     deltaTime = 0.0f;
     oldTime = 0.0f;
 
+    //B1 B2
     MeshData StarMesh = LoadMesh("Models/star.obj");
 
+    //C1 C2
     objects.push_back(new GameObject(StarMesh, XMFLOAT3(-2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), StarMesh.FurthestPoint));
     objects.push_back(new GameObject(StarMesh, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), StarMesh.FurthestPoint));
     objects.push_back(new GameObject(StarMesh, XMFLOAT3(2.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f), StarMesh.FurthestPoint));
@@ -308,7 +310,7 @@ HRESULT Application::InitDevice()
         return hr;
 
     ID3D11ShaderResourceView* _pTextureRV = nullptr;
-    hr = CreateDDSTextureFromFile(_pd3dDevice, L"Images/Crate_COLOR.dds", nullptr, &_pTextureRV);
+    hr = CreateDDSTextureFromFile(_pd3dDevice, L"Images/Crate_COLOR.dds", nullptr, &_pTextureRV); //F1
 
     if (FAILED(hr))
         return hr;
@@ -488,6 +490,7 @@ void Application::Inputs()
     // ===============
     // Player movement
     // ===============
+    //E1
     if (GetAsyncKeyState(0x57) & 0x8000)//if W is pressed down
     {
         //move cam forwards
@@ -509,6 +512,7 @@ void Application::Inputs()
         cam->Strafe(deltaTime);
     }
 
+    //E3
     if (GetAsyncKeyState(0x51) & 0x8000)//if Q is pressed down
     {
         //decrease speed
@@ -525,6 +529,7 @@ void Application::Inputs()
     // ===============
     // Camera movement
     // ===============
+    //E2 I2
     if (GetAsyncKeyState(VK_UP) & 0x8000) //if up arrow is pressed
     {
         //point cam up
@@ -607,6 +612,7 @@ void Application::Inputs()
 
 void Application::Draw()
 {
+    //C3
     _pImmediateContext->RSSetState(rasterState == 0 ? _wireFrame : _solid);
 
     // Clear the back buffer
@@ -619,15 +625,15 @@ void Application::Draw()
 	XMMATRIX projection = XMLoadFloat4x4(&cam->GetProjection());
 
     // Update variables
-    lightDirection = XMFLOAT3(0.2f, 0.5f, -1.0f);
+    lightDirection = XMFLOAT3(1.0f, 1.0f, 1.0f);
     diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f);
     diffuseLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
     ambientMaterial = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
     ambientLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
     specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-    specularPower = 10.0f;
-    EyePosW = XMFLOAT4(cam->GetPos().x > 0 ? cam->GetPos().x : -cam->GetPos().x, cam->GetPos().y, cam->GetPos().z > 0 ? cam->GetPos().z : -cam->GetPos().z, 0.0f);
+    specularPower = 5.0f;
+    EyePosW = XMFLOAT4(cam->GetPos().x, cam->GetPos().y, cam->GetPos().z, 0.0f);//XMFLOAT4(cam->GetPos().x > 0 ? cam->GetPos().x : -cam->GetPos().x, cam->GetPos().y, cam->GetPos().z > 0 ? cam->GetPos().z : -cam->GetPos().z, 0.0f);
     //EyePosW = XMFLOAT4(4.0f, 4.0f, 4.0f, 0.0f);
 
     ConstantBuffer cb;

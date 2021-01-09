@@ -46,9 +46,9 @@ void GameObject::MoveWithCam(float speed, XMVECTOR camTarget)
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camTarget, pos));
 	//restrict movement beyond 9.5 x and z
-	if (out.x > 9.5f || out.x < -9.5f)
+	if (out.x + boundingSphere.Radius > 10 || out.x - boundingSphere.Radius < -10)
 		out.x = _position.x;
-	if (out.z > 9.5f || out.z < -9.5f)
+	if (out.z + boundingSphere.Radius > 10 || out.z - boundingSphere.Radius < -10)
 		out.z = _position.z;
 	//update position with new x and z
 	_position = XMFLOAT3(out.x, _position.y, out.z);
@@ -61,9 +61,9 @@ void GameObject::StrafeWithCam(float speed, XMVECTOR camRight)
 	XMFLOAT4 out;
 	XMStoreFloat4(&out, XMVectorMultiplyAdd(amount, camRight, pos));
 	//restrict movement beyond 9.5 x and z
-	if (out.x > 9.5f || out.x < -9.5f)
+	if (out.x + boundingSphere.Radius > 10 || out.x - boundingSphere.Radius < -10)
 		out.x = _position.x;
-	if (out.z > 9.5f || out.z < -9.5f)
+	if (out.z + boundingSphere.Radius > 10 || out.z - boundingSphere.Radius < -10)
 		out.z = _position.z;
 	//update position with new x and z
 	_position = XMFLOAT3(out.x, _position.y, out.z);
