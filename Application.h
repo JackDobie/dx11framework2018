@@ -88,7 +88,6 @@ private:
 	int rasterState;
 
 	MeshData LoadMesh(string path);
-	void LoadTexture(string path);
 
 public:
 	Application();

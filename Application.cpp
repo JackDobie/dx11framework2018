@@ -672,14 +672,6 @@ MeshData Application::LoadMesh(string path)
     return OBJLoader::Load((char*)path.c_str(), _pd3dDevice);
 }
 
-void Application::LoadTexture(string path)
-{
-    ID3D11ShaderResourceView* _pTextureRV = nullptr;
-    CreateDDSTextureFromFile(_pd3dDevice, (wchar_t*)path.c_str(), nullptr, &_pTextureRV);
-
-    _pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
-}
-
 void Application::MousePick()
 {
     XMMATRIX invView = XMMatrixInverse(nullptr, XMLoadFloat4x4(&cam->GetView()));
