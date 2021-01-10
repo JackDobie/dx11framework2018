@@ -79,13 +79,13 @@ float4 PS( VS_OUTPUT input ) : SV_Target
 
     float r = reflect(-LightVecW, input.Norm);
     float specularAmount = pow(max(dot(r, input.PosW), 0.0f), 1.0f);
-    float3 specular = specularAmount * SpecularMtrl * SpecularLight;
+    float3 specular = specularAmount * (SpecularMtrl * SpecularLight).rgb;
 
     float3 ambient = AmbientMtrl * AmbientLight;
 
     //D3
     float4 outColour;
-    outColour.rgb = diffuse + ambient + clamp(specular, 0, 1);
+    outColour.rgb = diffuse + ambient + specular;
     outColour.a = DiffuseMtrl.a;
     return outColour;
 }

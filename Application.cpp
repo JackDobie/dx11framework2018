@@ -625,14 +625,13 @@ void Application::Draw()
 	XMMATRIX projection = XMLoadFloat4x4(&cam->GetProjection());
 
     // Update variables
-    lightDirection = XMFLOAT3(1.0f, 1.0f, 1.0f);
-    diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f);
-    diffuseLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
+    lightDirection = XMFLOAT3(0.5f, 0.5f, -1.0f); //light direction from surface
+    diffuseMaterial = XMFLOAT4(0.8f, 0.5f, 0.5f, 1.0f); //diffuse material properties
+    diffuseLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f); //diffuse light colour
     ambientMaterial = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
     ambientLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
     specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-    specularPower = 5.0f;
     EyePosW = XMFLOAT4(cam->GetPos().x, cam->GetPos().y, cam->GetPos().z, 0.0f);//XMFLOAT4(cam->GetPos().x > 0 ? cam->GetPos().x : -cam->GetPos().x, cam->GetPos().y, cam->GetPos().z > 0 ? cam->GetPos().z : -cam->GetPos().z, 0.0f);
     //EyePosW = XMFLOAT4(4.0f, 4.0f, 4.0f, 0.0f);
 
@@ -646,7 +645,6 @@ void Application::Draw()
     cb.AmbientMtrl = ambientMaterial;
     cb.SpeculatMtrl = specularMaterial;
     cb.SpecularLight = specularLight;
-    cb.SpecularPower = specularPower;
     cb.EyePosW = EyePosW;
 
 
