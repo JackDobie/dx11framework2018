@@ -347,7 +347,6 @@ HRESULT Application::InitDevice()
 	InitShadersAndInputLayout();
 
     // Set index buffer
-    //_pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     // Set primitive topology
     _pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -632,8 +631,7 @@ void Application::Draw()
     ambientLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 0.5f);
     specularMaterial = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
     specularLight = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-    EyePosW = XMFLOAT4(cam->GetPos().x, cam->GetPos().y, cam->GetPos().z, 0.0f);//XMFLOAT4(cam->GetPos().x > 0 ? cam->GetPos().x : -cam->GetPos().x, cam->GetPos().y, cam->GetPos().z > 0 ? cam->GetPos().z : -cam->GetPos().z, 0.0f);
-    //EyePosW = XMFLOAT4(4.0f, 4.0f, 4.0f, 0.0f);
+    EyePosW = XMFLOAT4(cam->GetPos().x, cam->GetPos().y, cam->GetPos().z, 0.0f);
 
     ConstantBuffer cb;
 	cb.mView = XMMatrixTranspose(view);
@@ -726,6 +724,7 @@ void Application::MousePick()
             if(selectedObject != nullptr) selectedObject->SetFalling(true); // old selected object starts falling
             selectedObject = obj; //set selected object to the intersected object
             obj->SetFalling(false); //stop the intersected object from falling
+            break;
         }
     }
 }
